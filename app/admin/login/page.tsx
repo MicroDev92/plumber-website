@@ -125,7 +125,7 @@ export default function AdminLogin() {
         </Card>
 
         <div className="mt-6 text-center">
-          <p className="text-sm text-gray-300">Siguran admin pristup za Vodoinstaler Žekić</p>
+          <p className="text-sm text-gray-300">Siguran admin pristup za Vodoinstalater Zekić</p>
         </div>
       </div>
     </div>

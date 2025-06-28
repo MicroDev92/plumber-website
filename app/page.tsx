@@ -280,11 +280,11 @@ export default function HomePage() {
                 <Wrench className="h-5 w-5" />
               </div>
               <div>
-                <p className="font-semibold">Vodoinstaler Žekić</p>
+                <p className="font-semibold">Vodoinstalater Zekić</p>
                 <p className="text-sm text-slate-400">Licencirani i osigurani</p>
               </div>
             </div>
-            <p className="text-slate-400 text-sm">© 2024 Vodoinstaler Žekić. Sva prava zadržana.</p>
+            <p className="text-slate-400 text-sm">© 2024 Vodoinstalater Zekić. Sva prava zadržana.</p>
           </div>
         </div>
       </footer>

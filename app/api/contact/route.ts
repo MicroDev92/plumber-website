@@ -68,7 +68,7 @@ export async function POST(request: Request) {
           body: JSON.stringify({
             from: "noreply@vodoinstaler-zekic.rs", // Replace with your verified domain
             to: "info@vodoinstaler-zekic.rs", // Replace with your email
-            subject: "Nova poruka sa sajta - Vodoinstaler Žekić",
+            subject: "Nova poruka sa sajta - Vodoinstalater Zekić",
             html: `
               <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
                 <h2 style="color: #1e40af;">Nova poruka sa sajta</h2>
@@ -85,7 +85,7 @@ export async function POST(request: Request) {
                 <hr style="margin: 30px 0; border: none; border-top: 1px solid #e2e8f0;">
                 <p style="color: #64748b; font-size: 14px;">
                   Poslano: ${new Date().toLocaleString("sr-RS")}<br>
-                  Sa sajta: Vodoinstaler Žekić
+                  Sa sajta: Vodoinstalater Zekić
                 </p>
               </div>
             `,

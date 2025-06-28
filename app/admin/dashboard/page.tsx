@@ -181,7 +181,7 @@ export default function AdminDashboard() {
               </div>
               <div>
                 <h1 className="text-xl font-bold text-gray-900">Admin panel</h1>
-                <p className="text-sm text-gray-500">Vodoinstaler Žekić</p>
+                <p className="text-sm text-gray-500">Vodoinstalater Zekić</p>
               </div>
             </div>
             <div className="flex items-center gap-4">
@@ -446,7 +446,7 @@ export default function AdminDashboard() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <Label htmlFor="business-name">Naziv firme</Label>
-                    <Input id="business-name" defaultValue="Vodoinstaler Žekić" />
+                    <Input id="business-name" defaultValue="Vodoinstalater Zekić" />
                   </div>
                   <div>
                     <Label htmlFor="phone">Broj telefona</Label>
