@@ -18,7 +18,7 @@ export default function HomePage() {
                 <Wrench className="h-6 w-6" />
               </div>
               <div>
-                <h1 className="text-xl font-bold">Vodoinstaler Zekić</h1>
+                <h1 className="text-xl font-bold">Vodoinstalater Zekić</h1>
                 <p className="text-sm text-slate-300">Profesionalne vodoinstalaterske usluge</p>
               </div>
             </div>

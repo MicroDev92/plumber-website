@@ -8,7 +8,7 @@ import { Suspense } from "react"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Vodoinstaler Zekić - Profesionalne vodoinstalaterske usluge",
+  title: "Vodoinstalater Zekić - Profesionalne vodoinstalaterske usluge",
   description:
     "Stručne vodoinstalaterske usluge u Beogradu i okolini. Hitne intervencije 24/7, ugradnja, popravke i održavanje.",
   keywords: "vodoinstaler, Beograd, hitne intervencije, popravke, ugradnja",
