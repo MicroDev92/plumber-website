@@ -7,8 +7,13 @@ if (!supabaseUrl || !supabaseAnonKey) {
   throw new Error("Missing Supabase environment variables")
 }
 
+// Export the createClient function directly
+export { createClient }
+
+// Default client instance
 export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
+// Server client with service role key
 export const createServerClient = () => {
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
 
