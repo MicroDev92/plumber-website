@@ -3,21 +3,20 @@
 import type React from "react"
 
 import { useState } from "react"
-import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Wrench, LogIn, AlertCircle, Loader2 } from "lucide-react"
+import { Wrench, Eye, EyeOff } from "lucide-react"
+import Link from "next/link"
+import { useRouter } from "next/navigation"
 
 export default function AdminLogin() {
-  const [credentials, setCredentials] = useState({
-    username: "",
-    password: "",
-  })
-  const [isLoading, setIsLoading] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
+  const [credentials, setCredentials] = useState({ username: "", password: "" })
   const [error, setError] = useState("")
+  const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -34,98 +33,123 @@ export default function AdminLogin() {
         body: JSON.stringify(credentials),
       })
 
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+
       const result = await response.json()
 
       if (result.success) {
         localStorage.setItem("adminAuth", "true")
+        localStorage.setItem("adminUser", result.user?.username || credentials.username)
         router.push("/admin/dashboard")
+        return
       } else {
-        setError(result.message || "Neispravni podaci za prijavu")
+        setError(result.message || "Neispravno korisničko ime ili lozinka")
       }
     } catch (error) {
       console.error("Login error:", error)
-      setError("Greška pri povezivanju sa serverom")
+      setError("Greška pri povezivanju sa serverom. Proverite internetsku vezu.")
     } finally {
       setIsLoading(false)
     }
   }
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCredentials((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }))
-  }
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-slate-100 flex items-center justify-center p-4">
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center">
-          <div className="flex justify-center mb-4">
-            <div className="bg-blue-600 p-3 rounded-lg">
-              <Wrench className="h-8 w-8 text-white" />
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 flex items-center justify-center p-4">
+      <div className="w-full max-w-md">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-3 text-white hover:text-blue-300 transition-colors mb-4"
+          >
+            <div className="bg-blue-600 p-2 rounded-lg">
+              <Wrench className="h-6 w-6" />
             </div>
-          </div>
-          <CardTitle className="text-2xl font-bold">Admin prijava</CardTitle>
-          <CardDescription>Vodoinstalater Žekić - Upravljanje sajtom</CardDescription>
-        </CardHeader>
-        <CardContent>
-          {error && (
-            <Alert className="mb-4 border-red-200 bg-red-50">
-              <AlertCircle className="h-4 w-4 text-red-600" />
-              <AlertDescription className="text-red-800">{error}</AlertDescription>
-            </Alert>
-          )}
+            <span className="text-lg font-semibold">Nazad na sajt</span>
+          </Link>
+        </div>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <Label htmlFor="username">Korisničko ime</Label>
-              <Input
-                id="username"
-                name="username"
-                type="text"
-                value={credentials.username}
-                onChange={handleChange}
-                placeholder="admin"
-                required
-                disabled={isLoading}
-              />
+        <Card className="shadow-2xl border-0">
+          <CardHeader className="space-y-1 pb-6">
+            <div className="flex justify-center mb-4">
+              <div className="bg-blue-100 p-4 rounded-full">
+                <Wrench className="h-8 w-8 text-blue-600" />
+              </div>
             </div>
-            <div>
-              <Label htmlFor="password">Lozinka</Label>
-              <Input
-                id="password"
-                name="password"
-                type="password"
-                value={credentials.password}
-                onChange={handleChange}
-                placeholder="••••••••"
-                required
-                disabled={isLoading}
-              />
-            </div>
-            <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700" disabled={isLoading}>
-              {isLoading ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Prijavljivanje...
-                </>
-              ) : (
-                <>
-                  <LogIn className="mr-2 h-4 w-4" />
-                  Prijavite se
-                </>
+            <CardTitle className="text-2xl text-center font-bold">Admin prijava</CardTitle>
+            <CardDescription className="text-center">
+              Pristupite admin panelu za upravljanje vašim vodoinstalaterskim sajtom
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="username">Korisničko ime</Label>
+                <Input
+                  id="username"
+                  type="text"
+                  placeholder="Unesite korisničko ime"
+                  value={credentials.username}
+                  onChange={(e) => setCredentials((prev) => ({ ...prev, username: e.target.value }))}
+                  required
+                  className="h-11"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="password">Lozinka</Label>
+                <div className="relative">
+                  <Input
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Unesite lozinku"
+                    value={credentials.password}
+                    onChange={(e) => setCredentials((prev) => ({ ...prev, password: e.target.value }))}
+                    required
+                    className="h-11 pr-10"
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-4 w-4 text-gray-400" />
+                    ) : (
+                      <Eye className="h-4 w-4 text-gray-400" />
+                    )}
+                  </Button>
+                </div>
+              </div>
+
+              {error && (
+                <Alert variant="destructive">
+                  <AlertDescription>{error}</AlertDescription>
+                </Alert>
               )}
-            </Button>
-          </form>
 
-          <div className="mt-6 text-center">
-            <p className="text-sm text-gray-600">
-              Demo podaci: <strong>admin</strong> / <strong>plumber2024</strong>
-            </p>
-          </div>
-        </CardContent>
-      </Card>
+              <Button type="submit" className="w-full h-11 bg-blue-600 hover:bg-blue-700" disabled={isLoading}>
+                {isLoading ? "Prijavljivanje..." : "Prijavite se"}
+              </Button>
+            </form>
+
+            <div className="mt-6 text-center space-y-2">
+              <p className="text-sm text-gray-600">
+                <strong>Demo pristup:</strong> admin / plumber2024
+              </p>
+              <p className="text-xs text-gray-500">Za produkciju, promenite lozinku u admin panelu</p>
+            </div>
+          </CardContent>
+        </Card>
+
+        <div className="mt-6 text-center">
+          <p className="text-sm text-gray-300">Siguran admin pristup za Vodoinstalater Žekić</p>
+        </div>
+      </div>
     </div>
   )
 }
