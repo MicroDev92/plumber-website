@@ -14,7 +14,7 @@ export async function GET() {
 
     // Return default settings if none exist
     const defaultSettings = {
-      business_name: "Vodoinstalater Žekić",
+      business_name: "Vodoinstalater Zekić",
       phone: "+381 60 123 4567",
       email: "info@vodoinstaler-zekic.rs",
       service_area: "Beograd i okolina",

@@ -1,7 +1,7 @@
 -- Create site_settings table for managing website configuration
 CREATE TABLE IF NOT EXISTS site_settings (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  business_name TEXT NOT NULL DEFAULT 'Vodoinstalater Žekić',
+  business_name TEXT NOT NULL DEFAULT 'Vodoinstalater Zekić',
   phone TEXT NOT NULL DEFAULT '+381 60 123 4567',
   email TEXT NOT NULL DEFAULT 'info@vodoinstaler-zekic.rs',
   service_area TEXT NOT NULL DEFAULT 'Beograd i okolina',
@@ -35,7 +35,7 @@ INSERT INTO site_settings (
   working_hours,
   emergency_available
 ) VALUES (
-  'Vodoinstalater Žekić',
+  'Vodoinstalater Zekić',
   '+381 60 123 4567',
   'info@vodoinstaler-zekic.rs',
   'Beograd i okolina',

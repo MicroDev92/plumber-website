@@ -8,12 +8,41 @@ import { ContactForm } from "@/components/contact-form"
 import { GallerySection } from "@/components/gallery-section"
 import { TestimonialsSection } from "@/components/testimonials-section"
 import { MobileNav } from "@/components/mobile-nav"
+import { createServerClient } from "@/lib/supabase"
 
 // Force dynamic rendering to avoid static generation cache
 export const dynamic = "force-dynamic"
 export const revalidate = 0
 
-export default function HomePage() {
+async function getSettings() {
+  try {
+    const supabase = createServerClient()
+    const { data: settings, error } = await supabase.from("site_settings").select("*").single()
+
+    if (error && error.code !== "PGRST116") {
+      console.error("Database error:", error)
+      return null
+    }
+
+    return settings
+  } catch (error) {
+    console.error("Failed to fetch settings:", error)
+    return null
+  }
+}
+
+export default async function HomePage() {
+  const settings = await getSettings()
+
+  // Default settings fallback
+  const businessName = settings?.business_name || "Vodoinstalater Zekić"
+  const phone = settings?.phone || "+381 60 123 4567"
+  const email = settings?.email || "info@vodoinstaler-zekic.rs"
+  const serviceArea = settings?.service_area || "Beograd i okolina"
+  const description =
+    settings?.description ||
+    "Profesionalne vodoinstalaterske usluge sa preko 25 godina iskustva. Pružamo kvalitetne usluge ugradnje, popravke i održavanja vodovodnih i kanalizacionih sistema."
+
   return (
     <div className="min-h-screen bg-white">
       {/* Header */}
@@ -25,7 +54,7 @@ export default function HomePage() {
                 <Wrench className="h-6 w-6" />
               </div>
               <div>
-                <h1 className="text-lg md:text-xl font-bold">Vodoinstalater Žekić</h1>
+                <h1 className="text-lg md:text-xl font-bold">{businessName}</h1>
                 <p className="text-xs md:text-sm text-slate-300 hidden sm:block">
                   Profesionalne vodoinstalaterske usluge
                 </p>
@@ -72,16 +101,15 @@ export default function HomePage() {
               <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-slate-900 mb-4 md:mb-6">
                 Stručne vodoinstalaterske usluge kojima možete verovati
               </h2>
-              <p className="text-base md:text-lg text-slate-600 mb-6 md:mb-8">
-                Sa preko 25 godina iskustva, pružamo vrhunska vodoinstalaterska rešenja za stambene i poslovne objekte.
-                Dostupni smo 24/7 za hitne intervencije.
-              </p>
+              <p className="text-base md:text-lg text-slate-600 mb-6 md:mb-8">{description}</p>
               <div className="flex flex-col sm:flex-row gap-4">
-                <Button size="lg" className="bg-blue-600 hover:bg-blue-700">
-                  <Phone className="mr-2 h-5 w-5" />
-                  <span className="hidden sm:inline">Pozovite odmah: </span>
-                  <span className="sm:hidden">Pozovi: </span>
-                  +381 60 123 4567
+                <Button size="lg" className="bg-blue-600 hover:bg-blue-700" asChild>
+                  <a href={`tel:${phone.replace(/\s/g, "")}`}>
+                    <Phone className="mr-2 h-5 w-5" />
+                    <span className="hidden sm:inline">Pozovite odmah: </span>
+                    <span className="sm:hidden">Pozovi: </span>
+                    {phone}
+                  </a>
                 </Button>
                 <Button variant="outline" size="lg">
                   Besplatan predračun
@@ -211,7 +239,7 @@ export default function HomePage() {
 
               <div className="space-y-4">
                 <a
-                  href="tel:+381601234567"
+                  href={`tel:${phone.replace(/\s/g, "")}`}
                   className="flex items-center gap-4 p-3 rounded-lg hover:bg-slate-800 transition-colors"
                 >
                   <div className="bg-blue-600 p-2 md:p-3 rounded-lg">
@@ -219,12 +247,12 @@ export default function HomePage() {
                   </div>
                   <div>
                     <p className="font-semibold">Telefon</p>
-                    <p className="text-slate-300">+381 60 123 4567</p>
+                    <p className="text-slate-300">{phone}</p>
                   </div>
                 </a>
 
                 <a
-                  href="mailto:info@vodoinstaler-zekic.rs"
+                  href={`mailto:${email}`}
                   className="flex items-center gap-4 p-3 rounded-lg hover:bg-slate-800 transition-colors"
                 >
                   <div className="bg-blue-600 p-2 md:p-3 rounded-lg">
@@ -232,7 +260,7 @@ export default function HomePage() {
                   </div>
                   <div>
                     <p className="font-semibold">Email</p>
-                    <p className="text-slate-300">info@vodoinstaler-zekic.rs</p>
+                    <p className="text-slate-300">{email}</p>
                   </div>
                 </a>
 
@@ -242,7 +270,7 @@ export default function HomePage() {
                   </div>
                   <div>
                     <p className="font-semibold">Oblast rada</p>
-                    <p className="text-slate-300">Beograd i okolina</p>
+                    <p className="text-slate-300">{serviceArea}</p>
                   </div>
                 </div>
               </div>
@@ -262,12 +290,12 @@ export default function HomePage() {
                 <Wrench className="h-4 w-4 md:h-5 md:w-5" />
               </div>
               <div>
-                <p className="font-semibold">Vodoinstalater Žekić</p>
+                <p className="font-semibold">{businessName}</p>
                 <p className="text-xs md:text-sm text-slate-400">Licencirani i osigurani</p>
               </div>
             </div>
             <p className="text-slate-400 text-xs md:text-sm text-center md:text-right">
-              © 2024 Vodoinstalater Žekić. Sva prava zadržana.
+              © 2024 {businessName}. Sva prava zadržana.
             </p>
           </div>
         </div>

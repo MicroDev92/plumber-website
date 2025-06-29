@@ -108,7 +108,7 @@ export default function AdminDashboard() {
 
   // Settings state
   const [settings, setSettings] = useState<SiteSettings>({
-    business_name: "Vodoinstalater Žekić",
+    business_name: "Vodoinstalater Zekić",
     phone: "+381 60 123 4567",
     email: "info@vodoinstaler-zekic.rs",
     service_area: "Beograd i okolina",
@@ -430,7 +430,7 @@ export default function AdminDashboard() {
                 </div>
                 <div>
                   <h1 className="text-xl font-bold text-gray-900">Admin panel</h1>
-                  <p className="text-sm text-gray-500">Vodoinstalater Žekić</p>
+                  <p className="text-sm text-gray-500">Vodoinstalater Zekić</p>
                 </div>
               </div>
               <div className="flex items-center gap-4">
@@ -852,7 +852,7 @@ export default function AdminDashboard() {
                             id="business-name"
                             value={settings.business_name}
                             onChange={(e) => handleSettingsChange("business_name", e.target.value)}
-                            placeholder="Vodoinstalater Žekić"
+                            placeholder="Vodoinstalater Zekić"
                           />
                         </div>
                         <div>
