@@ -8,7 +8,10 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 
     const { error } = await supabase
       .from("contact_inquiries")
-      .update({ status, updated_at: new Date().toISOString() })
+      .update({
+        status,
+        updated_at: new Date().toISOString(),
+      })
       .eq("id", params.id)
 
     if (error) {
@@ -18,7 +21,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 
     return NextResponse.json({
       success: true,
-      message: "Status upita je ažuriran",
+      message: "Status upita je uspešno ažuriran",
     })
   } catch (error) {
     console.error("Server error:", error)
@@ -39,7 +42,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
 
     return NextResponse.json({
       success: true,
-      message: "Upit je obrisan",
+      message: "Upit je uspešno obrisan",
     })
   } catch (error) {
     console.error("Server error:", error)
