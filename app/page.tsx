@@ -1,10 +1,12 @@
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Phone, Mail, MapPin, Wrench, Droplets, Zap, Clock, Star, CheckCircle } from "lucide-react"
+import { Phone, Mail, MapPin, Wrench, Droplets, Zap, Clock, CheckCircle } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { ContactForm } from "@/components/contact-form"
+import { GallerySection } from "@/components/gallery-section-server"
+import { TestimonialsSection } from "@/components/testimonials-section"
 
 export default function HomePage() {
   return (
@@ -28,6 +30,9 @@ export default function HomePage() {
               </Link>
               <Link href="#gallery" className="hover:text-blue-400 transition-colors">
                 Galerija
+              </Link>
+              <Link href="#testimonials" className="hover:text-blue-400 transition-colors">
+                Recenzije
               </Link>
               <Link href="#contact" className="hover:text-blue-400 transition-colors">
                 Kontakt
@@ -76,6 +81,7 @@ export default function HomePage() {
                 width={600}
                 height={500}
                 className="rounded-lg shadow-xl"
+                priority
               />
               <div className="absolute -bottom-6 -left-6 bg-white p-4 rounded-lg shadow-lg">
                 <div className="flex items-center gap-3">
@@ -151,75 +157,11 @@ export default function HomePage() {
       </section>
 
       {/* Gallery Section */}
-      <section id="gallery" className="py-20 bg-slate-50">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h3 className="text-3xl font-bold text-slate-900 mb-4">Naši radovi</h3>
-            <p className="text-lg text-slate-600">
-              Pogledajte primere naših profesionalnih vodoinstalaterskih radova i popravki
-            </p>
-          </div>
+      <GallerySection />
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[1, 2, 3, 4, 5, 6].map((item) => (
-              <div key={item} className="relative group overflow-hidden rounded-lg">
-                <Image
-                  src={`/placeholder.svg?height=300&width=400`}
-                  alt={`Plumbing work example ${item}`}
-                  width={400}
-                  height={300}
-                  className="w-full h-64 object-cover transition-transform group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all flex items-center justify-center">
-                  <Button variant="secondary" className="opacity-0 group-hover:opacity-100 transition-opacity">
-                    Pogledaj detalje
-                  </Button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Testimonials */}
-      <section className="py-20 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h3 className="text-3xl font-bold text-slate-900 mb-4">Šta kažu naši klijenti</h3>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {[
-              {
-                name: "Nikola Petrović",
-                text: "Odlična usluga! Brz odziv i profesionalan rad. Topla preporuka!",
-                rating: 5,
-              },
-              {
-                name: "Milena Jovanović",
-                text: "Veoma sam zadovoljna renoviranjem kupatila. Kvalitetan rad po pristupačnim cenama.",
-                rating: 5,
-              },
-              {
-                name: "Dušan Nikolić",
-                text: "Profesionalni i pouzdani. Brzo i efikasno su rešili hitan problem sa curenjem.",
-                rating: 5,
-              },
-            ].map((testimonial, index) => (
-              <Card key={index}>
-                <CardContent className="p-6">
-                  <div className="flex mb-4">
-                    {[...Array(testimonial.rating)].map((_, i) => (
-                      <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
-                    ))}
-                  </div>
-                  <p className="text-slate-600 mb-4">"{testimonial.text}"</p>
-                  <p className="font-semibold text-slate-900">{testimonial.name}</p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
+      {/* Testimonials Section - Now dynamic */}
+      <section id="testimonials">
+        <TestimonialsSection />
       </section>
 
       {/* Contact Section */}
@@ -229,7 +171,7 @@ export default function HomePage() {
             <div>
               <h3 className="text-3xl font-bold mb-6">Kontaktirajte nas</h3>
               <p className="text-slate-300 mb-8">
-                Spremni da rešite vaše vodoinstalaterske probleme? Kontaktirajte nas danas za besplatnu konsultaciju i
+                Spremni da rešimo vaše vodoinstalaterske probleme? Kontaktirajte nas danas za besplatnu konsultaciju i
                 predračun.
               </p>
 

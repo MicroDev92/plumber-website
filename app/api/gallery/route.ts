@@ -5,37 +5,51 @@ export async function GET() {
   try {
     const supabase = createServerClient()
 
+    console.log("Fetching photos from database...")
+
     const { data: photos, error } = await supabase
       .from("gallery_photos")
       .select("*")
       .order("created_at", { ascending: false })
 
-    if (error) throw error
+    if (error) {
+      console.error("Database error:", error)
+      throw error
+    }
+
+    console.log(`Fetched ${photos?.length || 0} photos from database`)
 
     return NextResponse.json({
       success: true,
       photos: photos || [],
+      total: photos?.length || 0,
     })
   } catch (error) {
     console.error("Gallery API error:", error)
 
-    // Return demo photos as fallback
+    // Return sample photos as fallback
+    const fallbackPhotos = [
+      {
+        id: "sample-1",
+        title: "Ugradnja kupatila",
+        description: "Kompletna renovacija kupatila",
+        image_url: "/placeholder.svg?height=300&width=400",
+        created_at: new Date().toISOString(),
+      },
+      {
+        id: "sample-2",
+        title: "Kuhinjske instalacije",
+        description: "Ugradnja novog sudopera",
+        image_url: "/placeholder.svg?height=300&width=400",
+        created_at: new Date().toISOString(),
+      },
+    ]
+
     return NextResponse.json({
       success: true,
-      photos: [
-        {
-          id: 1,
-          title: "Ugradnja kupatila",
-          description: "Kompletna renovacija kupatila",
-          image_url: "/placeholder.svg?height=300&width=400",
-        },
-        {
-          id: 2,
-          title: "Kuhinjske instalacije",
-          description: "Ugradnja novog sudopera",
-          image_url: "/placeholder.svg?height=300&width=400",
-        },
-      ],
+      photos: fallbackPhotos,
+      total: fallbackPhotos.length,
+      fallback: true,
     })
   }
 }

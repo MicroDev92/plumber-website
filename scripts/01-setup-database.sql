@@ -1,5 +1,5 @@
 -- Production database setup for Supabase
--- Run this in your Supabase SQL editor (https://app.supabase.com)
+-- Run this in your Supabase SQL editor
 
 -- Contact inquiries table
 CREATE TABLE IF NOT EXISTS contact_inquiries (
@@ -53,4 +53,3 @@ CREATE INDEX IF NOT EXISTS idx_contact_inquiries_status ON contact_inquiries(sta
 CREATE INDEX IF NOT EXISTS idx_gallery_photos_created_at ON gallery_photos(created_at);
 CREATE INDEX IF NOT EXISTS idx_page_views_created_at ON page_views(created_at);
 CREATE INDEX IF NOT EXISTS idx_page_views_visitor_id ON page_views(visitor_id);
-CREATE INDEX IF NOT EXISTS idx_page_views_page ON page_views(page);
