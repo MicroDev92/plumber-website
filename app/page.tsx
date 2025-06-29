@@ -1,305 +1,322 @@
+import { Suspense } from "react"
+import {
+  Phone,
+  Mail,
+  MapPin,
+  Clock,
+  Wrench,
+  Droplets,
+  Zap,
+  Shield,
+  CheckCircle,
+  Users,
+  Award,
+  Calendar,
+} from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Phone, Mail, MapPin, Wrench, Droplets, Zap, Clock, CheckCircle, MessageSquare } from "lucide-react"
-import Image from "next/image"
 import Link from "next/link"
 import { ContactForm } from "@/components/contact-form"
-import { GallerySection } from "@/components/gallery-section"
 import { TestimonialsSection } from "@/components/testimonials-section"
-import { MobileNav } from "@/components/mobile-nav"
-import { createServerClient } from "@/lib/supabase"
+import { GallerySection } from "@/components/gallery-section"
+import { AnalyticsTracker } from "@/components/analytics-tracker"
+import { createClient } from "@/lib/supabase"
 
-// Force dynamic rendering to avoid static generation cache
-export const dynamic = "force-dynamic"
-export const revalidate = 0
-
+// Server component to fetch settings
 async function getSettings() {
   try {
-    const supabase = createServerClient()
-    const { data: settings, error } = await supabase.from("site_settings").select("*").single()
+    const supabase = createClient()
+    const { data, error } = await supabase.from("site_settings").select("*").single()
 
-    if (error && error.code !== "PGRST116") {
-      console.error("Database error:", error)
-      return null
+    if (error) {
+      console.error("Error fetching settings:", error)
+      // Return default values if no settings found
+      return {
+        business_name: "Vodoinstalater Zekić",
+        phone: "+381 60 123 4567",
+        email: "info@vodoinstalater-zekic.rs",
+        address: "Beograd, Srbija",
+        service_area: "Beograd i okolina",
+        years_experience: 25,
+        description: "Profesionalne vodoinstalaterske usluge sa 25 godina iskustva",
+        emergency_available: true,
+        working_hours: "Pon-Pet: 08:00-20:00, Sub: 09:00-17:00",
+      }
     }
 
-    return settings
+    return data
   } catch (error) {
-    console.error("Failed to fetch settings:", error)
-    return null
+    console.error("Error in getSettings:", error)
+    // Return default values on error
+    return {
+      business_name: "Vodoinstalater Zekić",
+      phone: "+381 60 123 4567",
+      email: "info@vodoinstalater-zekic.rs",
+      address: "Beograd, Srbija",
+      service_area: "Beograd i okolina",
+      years_experience: 25,
+      description: "Profesionalne vodoinstalaterske usluge sa 25 godina iskustva",
+      emergency_available: true,
+      working_hours: "Pon-Pet: 08:00-20:00, Sub: 09:00-17:00",
+    }
   }
 }
 
 export default async function HomePage() {
   const settings = await getSettings()
 
-  // Default settings fallback
-  const businessName = settings?.business_name || "Vodoinstalater Zekić"
-  const phone = settings?.phone || "+381 60 123 4567"
-  const email = settings?.email || "info@vodoinstaler-zekic.rs"
-  const serviceArea = settings?.service_area || "Beograd i okolina"
-  const description =
-    settings?.description ||
-    "Profesionalne vodoinstalaterske usluge sa preko 25 godina iskustva. Pružamo kvalitetne usluge ugradnje, popravke i održavanja vodovodnih i kanalizacionih sistema."
+  const services = [
+    {
+      icon: Droplets,
+      title: "Popravke cevi",
+      description: "Brza i efikasna popravka svih vrsta cevi i instalacija",
+    },
+    {
+      icon: Wrench,
+      title: "Ugradnja sanitarija",
+      description: "Profesionalna ugradnja WC šolja, lavabora i tuš kabina",
+    },
+    {
+      icon: Zap,
+      title: "Hitne intervencije",
+      description: "Dostupni 24/7 za hitne vodoinstalaterske probleme",
+    },
+    {
+      icon: Shield,
+      title: "Održavanje sistema",
+      description: "Redovno održavanje i servis vodovodnih instalacija",
+    },
+  ]
+
+  const features = ["Licencirani majstori", "Garancija na radove", "Besplatna procena", "Kvalitetni materijali"]
 
   return (
-    <div className="min-h-screen bg-white">
-      {/* Header */}
-      <header className="bg-slate-900 text-white sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="bg-blue-600 p-2 rounded-lg">
-                <Wrench className="h-6 w-6" />
+    <>
+      <AnalyticsTracker />
+      <div className="min-h-screen bg-white">
+        {/* Header */}
+        <header className="bg-white shadow-sm sticky top-0 z-50">
+          <div className="container mx-auto px-4 py-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="bg-blue-600 p-2 rounded-lg">
+                  <Wrench className="h-6 w-6 text-white" />
+                </div>
+                <div>
+                  <h1 className="text-xl font-bold text-gray-900">{settings.business_name}</h1>
+                  <p className="text-sm text-gray-600">{settings.years_experience} godina iskustva</p>
+                </div>
               </div>
-              <div>
-                <h1 className="text-lg md:text-xl font-bold">{businessName}</h1>
-                <p className="text-xs md:text-sm text-slate-300 hidden sm:block">
-                  Profesionalne vodoinstalaterske usluge
-                </p>
+              <div className="hidden md:flex items-center gap-6">
+                <div className="flex items-center gap-2 text-sm">
+                  <Phone className="h-4 w-4 text-blue-600" />
+                  <span className="font-medium">{settings.phone}</span>
+                </div>
+                <Button className="bg-blue-600 hover:bg-blue-700">Pozovite odmah</Button>
               </div>
             </div>
-
-            {/* Desktop Navigation */}
-            <nav className="hidden md:flex items-center gap-6">
-              <Link href="#services" className="hover:text-blue-400 transition-colors">
-                Usluge
-              </Link>
-              <Link href="#gallery" className="hover:text-blue-400 transition-colors">
-                Galerija
-              </Link>
-              <Link href="#testimonials" className="hover:text-blue-400 transition-colors">
-                Recenzije
-              </Link>
-              <Link href="#contact" className="hover:text-blue-400 transition-colors">
-                Kontakt
-              </Link>
-              <Link href="/admin/login">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="text-white border-white hover:bg-white hover:text-slate-900 bg-transparent"
-                >
-                  Admin
-                </Button>
-              </Link>
-            </nav>
-
-            {/* Mobile Navigation */}
-            <MobileNav />
           </div>
-        </div>
-      </header>
+        </header>
 
-      {/* Hero Section */}
-      <section className="bg-gradient-to-br from-blue-50 to-slate-100 py-12 md:py-20">
-        <div className="container mx-auto px-4">
-          <div className="grid lg:grid-cols-2 gap-8 md:gap-12 items-center">
-            <div>
-              <Badge className="mb-4 bg-blue-100 text-blue-800 hover:bg-blue-100">Profesionalno i pouzdano</Badge>
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-slate-900 mb-4 md:mb-6">
-                Stručne vodoinstalaterske usluge kojima možete verovati
+        {/* Hero Section */}
+        <section className="bg-gradient-to-br from-blue-50 to-slate-100 py-20">
+          <div className="container mx-auto px-4">
+            <div className="max-w-4xl mx-auto text-center">
+              <Badge className="mb-6 bg-blue-100 text-blue-800 hover:bg-blue-100">⚡ Hitne intervencije 24/7</Badge>
+              <h2 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
+                Profesionalne
+                <span className="text-blue-600 block">vodoinstalaterske usluge</span>
               </h2>
-              <p className="text-base md:text-lg text-slate-600 mb-6 md:mb-8">{description}</p>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Button size="lg" className="bg-blue-600 hover:bg-blue-700" asChild>
-                  <a href={`tel:${phone.replace(/\s/g, "")}`}>
-                    <Phone className="mr-2 h-5 w-5" />
-                    <span className="hidden sm:inline">Pozovite odmah: </span>
-                    <span className="sm:hidden">Pozovi: </span>
-                    {phone}
-                  </a>
-                </Button>
-                <Button variant="outline" size="lg">
-                  Besplatan predračun
-                </Button>
-              </div>
-            </div>
-            <div className="relative">
-              <Image
-                src="/placeholder.svg?height=500&width=600"
-                alt="Professional plumber at work"
-                width={600}
-                height={500}
-                className="rounded-lg shadow-xl"
-                priority
-              />
-              <div className="absolute -bottom-4 -left-4 md:-bottom-6 md:-left-6 bg-white p-3 md:p-4 rounded-lg shadow-lg">
-                <div className="flex items-center gap-2 md:gap-3">
-                  <div className="bg-green-100 p-1.5 md:p-2 rounded-full">
-                    <CheckCircle className="h-4 w-4 md:h-6 md:w-6 text-green-600" />
-                  </div>
-                  <div>
-                    <p className="font-semibold text-slate-900 text-sm md:text-base">Licencirani i osigurani</p>
-                    <p className="text-xs md:text-sm text-slate-600">Sertifikovani stručnjak</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Services Section */}
-      <section id="services" className="py-12 md:py-20 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12 md:mb-16">
-            <h3 className="text-2xl md:text-3xl font-bold text-slate-900 mb-4">Naše usluge</h3>
-            <p className="text-base md:text-lg text-slate-600 max-w-2xl mx-auto">
-              Nudimo sveobuhvatne vodoinstalaterske usluge za sve vaše stambene i poslovne potrebe
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-            {[
-              {
-                icon: <Droplets className="h-6 w-6 md:h-8 md:w-8" />,
-                title: "Ugradnja i popravka cevi",
-                description: "Kompletna ugradnja, popravka i zamena cevi za sve tipove vodoinstalaterskih sistema.",
-              },
-              {
-                icon: <Wrench className="h-6 w-6 md:h-8 md:w-8" />,
-                title: "Ugradnja sanitarija",
-                description: "Profesionalna ugradnja sudopera, toaleta, tuš kabina i ostale sanitarne opreme.",
-              },
-              {
-                icon: <Zap className="h-6 w-6 md:h-8 md:w-8" />,
-                title: "Hitne intervencije",
-                description: "24/7 hitne vodoinstalaterske usluge za urgentne popravke i sprečavanje štete od vode.",
-              },
-              {
-                icon: <Clock className="h-6 w-6 md:h-8 md:w-8" />,
-                title: "Servisne usluge",
-                description: "Redovno održavanje i pregled instalacija za sprečavanje skupih kvarova.",
-              },
-              {
-                icon: <Droplets className="h-6 w-6 md:h-8 md:w-8" />,
-                title: "Čišćenje odvoda",
-                description: "Profesionalno čišćenje i otčepljivanje odvoda najsavremenijom opremom.",
-              },
-              {
-                icon: <Wrench className="h-6 w-6 md:h-8 md:w-8" />,
-                title: "Usluge bojlera",
-                description: "Ugradnja, popravka i održavanje klasičnih i protočnih bojlera.",
-              },
-            ].map((service, index) => (
-              <Card key={index} className="hover:shadow-lg transition-shadow">
-                <CardContent className="p-4 md:p-6">
-                  <div className="bg-blue-100 w-12 h-12 md:w-16 md:h-16 rounded-lg flex items-center justify-center mb-3 md:mb-4 text-blue-600">
-                    {service.icon}
-                  </div>
-                  <h4 className="text-lg md:text-xl font-semibold text-slate-900 mb-2 md:mb-3">{service.title}</h4>
-                  <p className="text-sm md:text-base text-slate-600">{service.description}</p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Gallery Section */}
-      <GallerySection />
-
-      {/* Testimonials Section */}
-      <section id="testimonials">
-        <TestimonialsSection />
-      </section>
-
-      {/* Call to Action for Reviews */}
-      <section className="py-12 md:py-16 bg-blue-50">
-        <div className="container mx-auto px-4 text-center">
-          <div className="max-w-2xl mx-auto">
-            <MessageSquare className="h-10 w-10 md:h-12 md:w-12 text-blue-600 mx-auto mb-4" />
-            <h3 className="text-xl md:text-2xl font-bold text-slate-900 mb-4">Bili ste naš klijent?</h3>
-            <p className="text-base md:text-lg text-slate-600 mb-6">
-              Vaše mišljenje je važno za nas! Podelite svoje iskustvo i pomozite drugim klijentima da donose informisane
-              odluke.
-            </p>
-            <Link href="/testimonials/add">
-              <Button size="lg" className="bg-blue-600 hover:bg-blue-700">
-                <MessageSquare className="mr-2 h-4 w-4 md:h-5 md:w-5" />
-                Ostavite recenziju
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Contact Section */}
-      <section id="contact" className="py-12 md:py-20 bg-slate-900 text-white">
-        <div className="container mx-auto px-4">
-          <div className="grid lg:grid-cols-2 gap-8 md:gap-12">
-            <div>
-              <h3 className="text-2xl md:text-3xl font-bold mb-6">Kontaktirajte nas</h3>
-              <p className="text-slate-300 mb-6 md:mb-8">
-                Spremni da rešimo vaše vodoinstalaterske probleme? Kontaktirajte nas danas za besplatnu konsultaciju i
-                predračun.
+              <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+                {settings.description} u {settings.service_area}. Brzo, pouzdano i po pristupačnim cenama.
               </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-lg px-8 py-3">
+                  <Phone className="mr-2 h-5 w-5" />
+                  Pozovite: {settings.phone}
+                </Button>
+                <Button size="lg" variant="outline" className="text-lg px-8 py-3 bg-transparent">
+                  Besplatna procena
+                </Button>
+              </div>
+            </div>
+          </div>
+        </section>
 
-              <div className="space-y-4">
-                <a
-                  href={`tel:${phone.replace(/\s/g, "")}`}
-                  className="flex items-center gap-4 p-3 rounded-lg hover:bg-slate-800 transition-colors"
-                >
-                  <div className="bg-blue-600 p-2 md:p-3 rounded-lg">
-                    <Phone className="h-5 w-5 md:h-6 md:w-6" />
-                  </div>
-                  <div>
-                    <p className="font-semibold">Telefon</p>
-                    <p className="text-slate-300">{phone}</p>
-                  </div>
-                </a>
+        {/* Services Section */}
+        <section className="py-20 bg-white">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-16">
+              <h3 className="text-3xl font-bold text-gray-900 mb-4">Naše usluge</h3>
+              <p className="text-gray-600 max-w-2xl mx-auto">
+                Pružamo kompletne vodoinstalaterske usluge za stanove, kuće i poslovne objekte
+              </p>
+            </div>
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+              {services.map((service, index) => (
+                <Card key={index} className="text-center hover:shadow-lg transition-shadow">
+                  <CardContent className="p-6">
+                    <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <service.icon className="h-8 w-8 text-blue-600" />
+                    </div>
+                    <h4 className="text-xl font-semibold mb-2">{service.title}</h4>
+                    <p className="text-gray-600">{service.description}</p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </section>
 
-                <a
-                  href={`mailto:${email}`}
-                  className="flex items-center gap-4 p-3 rounded-lg hover:bg-slate-800 transition-colors"
-                >
-                  <div className="bg-blue-600 p-2 md:p-3 rounded-lg">
-                    <Mail className="h-5 w-5 md:h-6 md:w-6" />
+        {/* Why Choose Us */}
+        <section className="py-20 bg-gray-50">
+          <div className="container mx-auto px-4">
+            <div className="grid lg:grid-cols-2 gap-12 items-center">
+              <div>
+                <h3 className="text-3xl font-bold text-gray-900 mb-6">Zašto odabrati {settings.business_name}?</h3>
+                <div className="space-y-4">
+                  {features.map((feature, index) => (
+                    <div key={index} className="flex items-center gap-3">
+                      <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0" />
+                      <span className="text-gray-700">{feature}</span>
+                    </div>
+                  ))}
+                </div>
+                <div className="mt-8 grid grid-cols-3 gap-6">
+                  <div className="text-center">
+                    <div className="flex items-center justify-center mb-2">
+                      <Users className="h-6 w-6 text-blue-600" />
+                    </div>
+                    <div className="text-2xl font-bold text-gray-900">500+</div>
+                    <div className="text-sm text-gray-600">Zadovoljnih klijenata</div>
                   </div>
-                  <div>
-                    <p className="font-semibold">Email</p>
-                    <p className="text-slate-300">{email}</p>
+                  <div className="text-center">
+                    <div className="flex items-center justify-center mb-2">
+                      <Award className="h-6 w-6 text-blue-600" />
+                    </div>
+                    <div className="text-2xl font-bold text-gray-900">{settings.years_experience}</div>
+                    <div className="text-sm text-gray-600">Godina iskustva</div>
                   </div>
-                </a>
-
-                <div className="flex items-center gap-4 p-3">
-                  <div className="bg-blue-600 p-2 md:p-3 rounded-lg">
-                    <MapPin className="h-5 w-5 md:h-6 md:w-6" />
-                  </div>
-                  <div>
-                    <p className="font-semibold">Oblast rada</p>
-                    <p className="text-slate-300">{serviceArea}</p>
+                  <div className="text-center">
+                    <div className="flex items-center justify-center mb-2">
+                      <Calendar className="h-6 w-6 text-blue-600" />
+                    </div>
+                    <div className="text-2xl font-bold text-gray-900">24/7</div>
+                    <div className="text-sm text-gray-600">Hitne intervencije</div>
                   </div>
                 </div>
               </div>
+              <div className="bg-white p-8 rounded-2xl shadow-lg">
+                <h4 className="text-2xl font-bold text-gray-900 mb-6">Kontaktirajte nas</h4>
+                <Suspense fallback={<div>Loading...</div>}>
+                  <ContactForm />
+                </Suspense>
+              </div>
             </div>
-
-            <ContactForm />
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Footer */}
-      <footer className="bg-slate-800 text-white py-6 md:py-8">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="flex items-center gap-3 mb-4 md:mb-0">
-              <div className="bg-blue-600 p-2 rounded-lg">
-                <Wrench className="h-4 w-4 md:h-5 md:w-5" />
+        {/* Gallery Section */}
+        <Suspense fallback={<div className="py-20 text-center">Učitavanje galerije...</div>}>
+          <GallerySection />
+        </Suspense>
+
+        {/* Testimonials */}
+        <Suspense fallback={<div className="py-20 text-center">Učitavanje utisaka...</div>}>
+          <TestimonialsSection />
+        </Suspense>
+
+        {/* Contact Section */}
+        <section className="py-20 bg-blue-600 text-white">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-12">
+              <h3 className="text-3xl font-bold mb-4">Kontakt informacije</h3>
+              <p className="text-blue-100 max-w-2xl mx-auto">
+                Dostupni smo {settings.working_hours}. Za hitne slučajeve pozovite bilo kada!
+              </p>
+            </div>
+            <div className="grid md:grid-cols-3 gap-8 text-center">
+              <div>
+                <div className="bg-blue-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Phone className="h-8 w-8" />
+                </div>
+                <h4 className="text-xl font-semibold mb-2">Telefon</h4>
+                <p className="text-blue-100">{settings.phone}</p>
               </div>
               <div>
-                <p className="font-semibold">{businessName}</p>
-                <p className="text-xs md:text-sm text-slate-400">Licencirani i osigurani</p>
+                <div className="bg-blue-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Mail className="h-8 w-8" />
+                </div>
+                <h4 className="text-xl font-semibold mb-2">Email</h4>
+                <p className="text-blue-100">{settings.email}</p>
+              </div>
+              <div>
+                <div className="bg-blue-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <MapPin className="h-8 w-8" />
+                </div>
+                <h4 className="text-xl font-semibold mb-2">Lokacija</h4>
+                <p className="text-blue-100">{settings.service_area}</p>
               </div>
             </div>
-            <p className="text-slate-400 text-xs md:text-sm text-center md:text-right">
-              © 2024 {businessName}. Sva prava zadržana.
-            </p>
           </div>
-        </div>
-      </footer>
-    </div>
+        </section>
+
+        {/* Footer */}
+        <footer className="bg-gray-900 text-white py-12">
+          <div className="container mx-auto px-4">
+            <div className="grid md:grid-cols-3 gap-8">
+              <div>
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="bg-blue-600 p-2 rounded-lg">
+                    <Wrench className="h-6 w-6 text-white" />
+                  </div>
+                  <div>
+                    <h5 className="text-xl font-bold">{settings.business_name}</h5>
+                    <p className="text-gray-400">{settings.years_experience} godina iskustva</p>
+                  </div>
+                </div>
+                <p className="text-gray-400">{settings.description}</p>
+              </div>
+              <div>
+                <h6 className="text-lg font-semibold mb-4">Kontakt</h6>
+                <div className="space-y-2 text-gray-400">
+                  <div className="flex items-center gap-2">
+                    <Phone className="h-4 w-4" />
+                    <span>{settings.phone}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Mail className="h-4 w-4" />
+                    <span>{settings.email}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <MapPin className="h-4 w-4" />
+                    <span>{settings.address}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Clock className="h-4 w-4" />
+                    <span>{settings.working_hours}</span>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <h6 className="text-lg font-semibold mb-4">Brzi linkovi</h6>
+                <div className="space-y-2">
+                  <Link href="/testimonials/add" className="block text-gray-400 hover:text-white transition-colors">
+                    Ostavite utisak
+                  </Link>
+                  <Link href="/admin/login" className="block text-gray-400 hover:text-white transition-colors">
+                    Admin panel
+                  </Link>
+                </div>
+              </div>
+            </div>
+            <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+              <p>&copy; 2024 {settings.business_name}. Sva prava zadržana.</p>
+            </div>
+          </div>
+        </footer>
+      </div>
+    </>
   )
 }
