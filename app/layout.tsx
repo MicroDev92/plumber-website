@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   title: "Vodoinstalater Zekić - Profesionalne vodoinstalaterske usluge",
   description:
     "Stručne vodoinstalaterske usluge u Beogradu i okolini. Hitne intervencije 24/7, ugradnja, popravke i održavanje.",
-  keywords: "vodoinstalater, Beograd, hitne intervencije, popravke, ugradnja",
+  keywords: "vodoinstaler, Beograd, hitne intervencije, popravke, ugradnja",
     generator: 'v0.dev'
 }
 

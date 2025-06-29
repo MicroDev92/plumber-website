@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server"
 import { uploadImage } from "@/lib/upload"
 import { createServerClient } from "@/lib/supabase"
-import { revalidatePath } from "next/cache"
+import { revalidatePath, revalidateTag } from "next/cache"
 
 export async function POST(request: Request) {
   try {
@@ -66,14 +66,30 @@ export async function POST(request: Request) {
 
     console.log("Photo saved to database:", data[0])
 
-    // Revalidate pages to show new photo immediately
-    revalidatePath("/")
-    revalidatePath("/admin/dashboard")
+    // 🚀 AUTOMATIC CACHE INVALIDATION
+    try {
+      // Revalidate all gallery-related pages immediately
+      revalidatePath("/", "layout")
+      revalidatePath("/")
+      revalidatePath("/admin/dashboard")
+      revalidatePath("/api/gallery")
+
+      // Revalidate tagged cache
+      revalidateTag("gallery")
+      revalidateTag("photos")
+
+      console.log("✅ Cache invalidated successfully after upload")
+    } catch (cacheError) {
+      console.error("❌ Cache invalidation failed:", cacheError)
+      // Don't fail the request if cache invalidation fails
+    }
 
     return NextResponse.json({
       success: true,
-      message: "Fotografija je uspešno dodana!",
+      message: "Fotografija je uspešno dodana i cache je ažuriran!",
       photo: data[0],
+      cache_invalidated: true,
+      timestamp: new Date().toISOString(),
     })
   } catch (error) {
     console.error("Upload API error:", error)

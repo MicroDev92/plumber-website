@@ -1,11 +1,15 @@
 import { NextResponse } from "next/server"
 import { createServerClient } from "@/lib/supabase"
 
+// Disable caching for this API route in production
+export const dynamic = "force-dynamic"
+export const revalidate = 0
+
 export async function GET() {
   try {
     const supabase = createServerClient()
 
-    console.log("Fetching photos from database...")
+    console.log("Fetching photos from database (no cache)...")
 
     const { data: photos, error } = await supabase
       .from("gallery_photos")
@@ -19,38 +23,41 @@ export async function GET() {
 
     console.log(`Fetched ${photos?.length || 0} photos from database`)
 
-    return NextResponse.json({
-      success: true,
-      photos: photos || [],
-      total: photos?.length || 0,
-    })
+    return NextResponse.json(
+      {
+        success: true,
+        photos: photos || [],
+        total: photos?.length || 0,
+        timestamp: new Date().toISOString(),
+        cached: false,
+      },
+      {
+        headers: {
+          "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+          "CDN-Cache-Control": "no-store",
+          "Vercel-CDN-Cache-Control": "no-store",
+        },
+      },
+    )
   } catch (error) {
     console.error("Gallery API error:", error)
 
-    // Return sample photos as fallback
-    const fallbackPhotos = [
+    return NextResponse.json(
       {
-        id: "sample-1",
-        title: "Ugradnja kupatila",
-        description: "Kompletna renovacija kupatila",
-        image_url: "/placeholder.svg?height=300&width=400",
-        created_at: new Date().toISOString(),
+        success: true,
+        photos: [],
+        total: 0,
+        error: "Database error - showing empty gallery",
+        timestamp: new Date().toISOString(),
       },
       {
-        id: "sample-2",
-        title: "Kuhinjske instalacije",
-        description: "Ugradnja novog sudopera",
-        image_url: "/placeholder.svg?height=300&width=400",
-        created_at: new Date().toISOString(),
+        headers: {
+          "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+          "CDN-Cache-Control": "no-store",
+          "Vercel-CDN-Cache-Control": "no-store",
+        },
       },
-    ]
-
-    return NextResponse.json({
-      success: true,
-      photos: fallbackPhotos,
-      total: fallbackPhotos.length,
-      fallback: true,
-    })
+    )
   }
 }
 

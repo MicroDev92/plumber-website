@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Lightbox } from "@/components/ui/lightbox"
-import { ImageIcon, Loader2, Expand } from "lucide-react"
+import { ImageIcon, Loader2, Expand, RefreshCw } from "lucide-react"
 import Image from "next/image"
 
 interface Photo {
@@ -20,31 +20,50 @@ export function GallerySection() {
   const [photos, setPhotos] = useState<Photo[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [lastFetch, setLastFetch] = useState<number>(0)
 
   // Lightbox state
   const [lightboxOpen, setLightboxOpen] = useState(false)
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
 
+  // 🚀 FIXED: Simple useEffect without problematic dependencies
   useEffect(() => {
     fetchPhotos()
-  }, [])
+  }, []) // Only run once on mount
 
-  const fetchPhotos = async () => {
+  const fetchPhotos = async (silent = false) => {
     try {
-      setIsLoading(true)
-      const response = await fetch("/api/gallery")
+      if (!silent) {
+        setIsLoading(true)
+        setError(null)
+      }
+
+      // Simple fetch without aggressive cache busting
+      const response = await fetch("/api/gallery", {
+        cache: "no-store",
+      })
+
       const result = await response.json()
+
+      console.log("Gallery API response:", result)
 
       if (result.success) {
         setPhotos(result.photos || [])
+        setLastFetch(Date.now())
       } else {
         setError("Greška pri učitavanju fotografija")
+        setPhotos([])
       }
     } catch (err) {
       console.error("Gallery fetch error:", err)
-      setError("Greška pri učitavanju fotografija")
+      if (!silent) {
+        setError("Greška pri učitavanju fotografija")
+        setPhotos([])
+      }
     } finally {
-      setIsLoading(false)
+      if (!silent) {
+        setIsLoading(false)
+      }
     }
   }
 
@@ -79,7 +98,12 @@ export function GallerySection() {
       <section id="gallery" className="py-20 bg-slate-50">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h3 className="text-3xl font-bold text-slate-900 mb-4">Naši radovi</h3>
+            <div className="flex items-center justify-center gap-4 mb-4">
+              <h3 className="text-3xl font-bold text-slate-900">Naši radovi</h3>
+              <Button variant="outline" size="sm" onClick={() => fetchPhotos()} disabled={isLoading} className="ml-2">
+                <RefreshCw className={`h-4 w-4 ${isLoading ? "animate-spin" : ""}`} />
+              </Button>
+            </div>
             <p className="text-lg text-slate-600">
               Pogledajte primere naših profesionalnih vodoinstalaterskih radova i popravki
             </p>
@@ -87,6 +111,11 @@ export function GallerySection() {
               <Badge variant="outline" className="mt-2">
                 {photos.length} {photos.length === 1 ? "fotografija" : "fotografija"}
               </Badge>
+            )}
+            {lastFetch > 0 && !isLoading && (
+              <p className="text-xs text-gray-500 mt-2">
+                Poslednje ažuriranje: {new Date(lastFetch).toLocaleTimeString("sr-RS")}
+              </p>
             )}
           </div>
 
@@ -101,7 +130,7 @@ export function GallerySection() {
                 <ImageIcon className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                 <h4 className="text-lg font-semibold text-gray-900 mb-2">Greška pri učitavanju</h4>
                 <p className="text-gray-600 mb-4">{error}</p>
-                <Button onClick={fetchPhotos} variant="outline">
+                <Button onClick={() => fetchPhotos()} variant="outline">
                   Pokušaj ponovo
                 </Button>
               </CardContent>
@@ -156,14 +185,16 @@ export function GallerySection() {
       </section>
 
       {/* Lightbox */}
-      <Lightbox
-        images={lightboxImages}
-        currentIndex={currentImageIndex}
-        isOpen={lightboxOpen}
-        onClose={closeLightbox}
-        onNext={nextImage}
-        onPrevious={previousImage}
-      />
+      {photos.length > 0 && (
+        <Lightbox
+          images={lightboxImages}
+          currentIndex={currentImageIndex}
+          isOpen={lightboxOpen}
+          onClose={closeLightbox}
+          onNext={nextImage}
+          onPrevious={previousImage}
+        />
+      )}
     </>
   )
 }

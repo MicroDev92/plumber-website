@@ -4,53 +4,97 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="33b1f8be-b8d4-40b4-9043-2ca555295e80" name="Changes" comment="" />
+    <list default="true" id="33b1f8be-b8d4-40b4-9043-2ca555295e80" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/app/api/admin/login.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/api/cache/clear-all/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/api/gallery/cleanup-all/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/api/gallery/cleanup/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/api/gallery/debug/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/api/gallery/force-refresh/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/api/testimonials/published/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/api/testimonials/submit/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/api/vercel/purge-cache/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/testimonials/add/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/mobile-nav.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/testimonials-admin.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scripts/05-fix-testimonials-table.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RESPONSIVE-FEATURES.md" beforeDir="false" afterPath="$PROJECT_DIR$/RESPONSIVE-FEATURES.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/admin/dashboard/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/admin/dashboard/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/admin/login/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/admin/login/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/gallery/[id]/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/gallery/[id]/route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/gallery/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/gallery/route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/gallery/upload/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/gallery/upload/route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/testimonials/[id]/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/testimonials/[id]/route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/gallery-section.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/gallery-section.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/testimonials-section.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/testimonials-section.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/ui/sheet.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/ui/sheet.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/upload.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/upload.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="TypeScript File" />
+        <option value="TypeScript JSX File" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "MicroDev92"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;MicroDev92&quot;
   }
-}]]></component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/MicroDev92/plumber-website.git",
-    "accountId": "b69041dd-0b0c-47ee-8b77-332249570a04"
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/MicroDev92/plumber-website.git&quot;,
+    &quot;accountId&quot;: &quot;b69041dd-0b0c-47ee-8b77-332249570a04&quot;
   }
-}]]></component>
+}</component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/package-lock.json" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/Aleksa/source/repos/plumber-website/scripts/01-setup-database.sql" root0="FORCE_HIGHLIGHTING" />
+  </component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
-  <component name="ProjectColorInfo"><![CDATA[{
-  "customColor": "",
-  "associatedIndex": 0
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 0
+}</component>
   <component name="ProjectId" id="2z8ac9AiqURVzAFLxJdgm8SjNqy" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "master",
-    "js.debugger.nextJs.config.created.client": "true",
-    "js.debugger.nextJs.config.created.server": "true",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "pnpm",
-    "ts.external.directory.path": "C:\\Users\\Aleksa\\source\\repos\\plumber-website\\node_modules\\typescript\\lib",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;js.debugger.nextJs.config.created.client&quot;: &quot;true&quot;,
+    &quot;js.debugger.nextJs.config.created.server&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;pnpm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;settings.nodejs&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Users\\Aleksa\\source\\repos\\plumber-website\\node_modules\\typescript\\lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected="npm.Next.js: server-side">
     <configuration name="Next.js: debug client-side" type="JavascriptDebugType" uri="http://localhost:3000/">
       <method v="2" />
@@ -73,7 +117,9 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1751115231982</updated>
-      <workItem from="1751115234426" duration="2747000" />
+      <workItem from="1751115234426" duration="3381000" />
+      <workItem from="1751190015219" duration="4626000" />
+      <workItem from="1751197283434" duration="5844000" />
     </task>
     <task id="LOCAL-00001" summary="init commit 2">
       <option name="closed" value="true" />
@@ -99,7 +145,23 @@
       <option name="project" value="LOCAL" />
       <updated>1751118002462</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="More name changes">
+      <option name="closed" value="true" />
+      <created>1751118146125</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1751118146125</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Photos and Testimonials">
+      <option name="closed" value="true" />
+      <created>1751201350509</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1751201350509</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -112,7 +174,9 @@
     <MESSAGE value="init commit 2" />
     <MESSAGE value="changes to tokens" />
     <MESSAGE value="Name changes" />
-    <option name="LAST_COMMIT_MESSAGE" value="Name changes" />
+    <MESSAGE value="More name changes" />
+    <MESSAGE value="Photos and Testimonials" />
+    <option name="LAST_COMMIT_MESSAGE" value="Photos and Testimonials" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -131,5 +195,9 @@
         </breakpoint>
       </breakpoints>
     </breakpoint-manager>
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>

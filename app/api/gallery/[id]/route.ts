@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 import { createServerClient } from "@/lib/supabase"
 import { deleteImage } from "@/lib/upload"
+import { revalidatePath, revalidateTag } from "next/cache"
 
 export async function DELETE(request: Request, { params }: { params: { id: string } }) {
   try {
@@ -17,7 +18,13 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
 
     if (fetchError) {
       console.error("Error fetching photo:", fetchError)
-      throw new Error("Fotografija nije pronađena")
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Fotografija nije pronađena",
+        },
+        { status: 404 },
+      )
     }
 
     console.log("Photo to delete:", photo)
@@ -34,16 +41,37 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
     if (photo?.image_url && photo.image_url.includes("supabase")) {
       try {
         await deleteImage(photo.image_url)
-        console.log("Image deleted from storage")
+        console.log("Image deleted from storage successfully")
       } catch (storageError) {
         console.error("Storage delete error:", storageError)
-        // Don't fail the request if storage delete fails
+        // Log but don't fail the request if storage delete fails
+        console.warn("Failed to delete image from storage, but database record was removed")
       }
+    }
+
+    // 🚀 AUTOMATIC CACHE INVALIDATION
+    try {
+      // Revalidate all gallery-related pages immediately
+      revalidatePath("/", "layout")
+      revalidatePath("/")
+      revalidatePath("/admin/dashboard")
+      revalidatePath("/api/gallery")
+
+      // Revalidate tagged cache
+      revalidateTag("gallery")
+      revalidateTag("photos")
+
+      console.log("✅ Cache invalidated successfully")
+    } catch (cacheError) {
+      console.error("❌ Cache invalidation failed:", cacheError)
+      // Don't fail the request if cache invalidation fails
     }
 
     return NextResponse.json({
       success: true,
-      message: "Fotografija je uspešno obrisana",
+      message: "Fotografija je uspešno obrisana i cache je ažuriran",
+      cache_invalidated: true,
+      timestamp: new Date().toISOString(),
     })
   } catch (error) {
     console.error("Delete API error:", error)
