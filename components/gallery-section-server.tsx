@@ -1,6 +1,6 @@
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
-import { ImageIcon } from "lucide-react"
+import { ImageIcon } from 'lucide-react'
 import { GalleryClient } from "./gallery-client"
 import { getGalleryPhotos } from "@/lib/gallery"
 
@@ -38,3 +38,6 @@ export async function GallerySection() {
     </section>
   )
 }
+
+// Add the missing named export
+export { GallerySection as GallerySectionServer }
