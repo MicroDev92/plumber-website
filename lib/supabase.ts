@@ -7,12 +7,15 @@ if (!supabaseUrl || !supabaseAnonKey) {
   throw new Error("Missing Supabase environment variables")
 }
 
+// Client-side Supabase client
 export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
+// Server-side Supabase client with service role key
 export const createServerClient = () => {
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
 
   if (!serviceRoleKey) {
+    console.warn("No service role key found, using anon key")
     return createClient(supabaseUrl, supabaseAnonKey)
   }
 

@@ -1,7 +1,7 @@
 import { createServerClient } from "@/lib/supabase"
 import { GallerySection } from "./gallery-section"
 
-async function getGalleryPhotos() {
+async function getGalleryPhotosServer() {
   try {
     const supabase = createServerClient()
 
@@ -24,9 +24,6 @@ async function getGalleryPhotos() {
 }
 
 export async function GallerySectionServer() {
-  const photos = await getGalleryPhotos()
+  const photos = await getGalleryPhotosServer()
   return <GallerySection initialPhotos={photos} />
 }
-
-// Export with both names for compatibility
-export { GallerySectionServer as GallerySection }
