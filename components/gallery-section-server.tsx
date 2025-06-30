@@ -1,10 +1,10 @@
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
-import { ImageIcon } from 'lucide-react'
-import { GalleryClient } from "./gallery-client"
+import { ImageIcon } from "lucide-react"
 import { getGalleryPhotos } from "@/lib/gallery"
+import { GallerySection } from "./gallery-section"
 
-export async function GallerySection() {
+export async function GallerySectionServer() {
   // Fetch photos server-side for faster initial load
   const photos = await getGalleryPhotos()
 
@@ -32,12 +32,9 @@ export async function GallerySection() {
             </CardContent>
           </Card>
         ) : (
-          <GalleryClient initialPhotos={photos} />
+          <GallerySection initialPhotos={photos} />
         )}
       </div>
     </section>
   )
 }
-
-// Add the missing named export
-export { GallerySection as GallerySectionServer }
