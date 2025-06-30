@@ -9,9 +9,10 @@ export async function GallerySectionServer() {
       .select("*")
       .eq("is_published", true)
       .order("created_at", { ascending: false })
+      .limit(12)
 
     if (error) {
-      console.error("Error fetching gallery photos:", error)
+      console.error("Gallery fetch error:", error)
       return <GalleryClient photos={[]} />
     }
 
@@ -22,5 +23,5 @@ export async function GallerySectionServer() {
   }
 }
 
-// Export with both names for compatibility
+// Export as both names for compatibility
 export { GallerySectionServer as GallerySection }

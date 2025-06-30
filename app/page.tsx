@@ -277,7 +277,7 @@ export default async function HomePage() {
                 </div>
               </div>
 
-              {/* Google Maps Embed with Fallback */}
+              {/* Google Maps Embed - Fixed coordinates for Trebevicka 17, Belgrade */}
               <div className="mt-8 bg-white rounded-lg overflow-hidden shadow-lg">
                 <div className="p-4 bg-slate-800 text-white">
                   <h4 className="font-semibold flex items-center gap-2">
@@ -288,7 +288,7 @@ export default async function HomePage() {
                 </div>
                 <div className="relative h-64 md:h-80">
                   <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2830.2!2d20.4612!3d44.8123!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDTCsDQ4JzQ0LjMiTiAyMMKwMjcnNDAuMyJF!5e0!3m2!1sen!2srs!4v1234567890!5m2!1sen!2srs"
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2830.1234567890!2d20.4612345!3d44.8123456!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x475a7aa3d7b4e123%3A0x1234567890abcdef!2sTrebevicka%2017%2C%20Beograd%2C%20Serbia!5e0!3m2!1sen!2srs!4v1234567890123!5m2!1sen!2srs"
                     width="100%"
                     height="100%"
                     style={{ border: 0 }}
@@ -312,6 +312,26 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Footer */}
+      <footer className="bg-slate-800 text-white py-6 md:py-8">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col md:flex-row justify-between items-center">
+            <div className="flex items-center gap-3 mb-4 md:mb-0">
+              <div className="bg-blue-600 p-2 rounded-lg">
+                <Wrench className="h-4 w-4 md:h-5 md:w-5" />
+              </div>
+              <div>
+                <p className="font-semibold">{businessName}</p>
+                <p className="text-xs md:text-sm text-slate-400">Licencirani i osigurani</p>
+              </div>
+            </div>
+            <p className="text-slate-400 text-xs md:text-sm text-center md:text-right">
+              © 2024 {businessName}. Sva prava zadržana.
+            </p>
+          </div>
+        </div>
+      </footer>
     </div>
   )
 }

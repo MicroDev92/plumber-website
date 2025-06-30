@@ -13,7 +13,7 @@ export async function GET() {
       .select("*", { count: "exact", head: true })
 
     if (totalError) {
-      console.error("❌ Error fetching total inquiries:", totalError)
+      console.error("❌ Error fetching total count:", totalError)
     } else {
       console.log("📊 Total inquiries in DB:", totalCount)
     }
@@ -28,7 +28,7 @@ export async function GET() {
       .gte("created_at", thirtyDaysAgo.toISOString())
 
     if (monthlyError) {
-      console.error("❌ Error fetching monthly inquiries:", monthlyError)
+      console.error("❌ Error fetching monthly count:", monthlyError)
     } else {
       console.log("📅 Monthly inquiries:", monthlyCount)
     }
@@ -40,7 +40,7 @@ export async function GET() {
       .eq("status", "pending")
 
     if (pendingError) {
-      console.error("❌ Error fetching pending inquiries:", pendingError)
+      console.error("❌ Error fetching pending count:", pendingError)
     } else {
       console.log("⏳ Pending inquiries count:", pendingCount)
     }
@@ -57,18 +57,31 @@ export async function GET() {
       console.log("📋 Actual pending records:", pendingRecords)
     }
 
-    const result = {
+    return NextResponse.json({
+      success: true,
       total: totalCount || 0,
       monthly: monthlyCount || 0,
       pending: pendingCount || 0,
       source: "database",
-    }
-
-    console.log("✅ Final inquiries result:", result)
-
-    return NextResponse.json(result)
+      debug: {
+        totalCount,
+        monthlyCount,
+        pendingCount,
+        pendingRecords: pendingRecords || [],
+      },
+    })
   } catch (error) {
-    console.error("💥 Inquiries fetch error:", error)
-    return NextResponse.json({ total: 0, monthly: 0, pending: 0, source: "fallback" }, { status: 500 })
+    console.error("💥 Inquiries analytics error:", error)
+    return NextResponse.json(
+      {
+        success: false,
+        total: 0,
+        monthly: 0,
+        pending: 0,
+        source: "error",
+        error: error instanceof Error ? error.message : "Unknown error",
+      },
+      { status: 500 },
+    )
   }
 }

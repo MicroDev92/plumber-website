@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Wrench, Eye, EyeOff } from "lucide-react"
+import { Wrench, Eye, EyeOff, Loader2 } from "lucide-react"
 
 export default function AdminLogin() {
   const [username, setUsername] = useState("")
@@ -21,8 +21,8 @@ export default function AdminLogin() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setIsLoading(true)
     setError("")
+    setIsLoading(true)
 
     try {
       const response = await fetch("/api/admin/login", {
@@ -35,10 +35,9 @@ export default function AdminLogin() {
 
       const data = await response.json()
 
-      if (data.success) {
-        // Store admin session
-        localStorage.setItem("adminLoggedIn", "true")
-        localStorage.setItem("adminLoginTime", Date.now().toString())
+      if (response.ok && data.success) {
+        // Store auth token
+        localStorage.setItem("admin_token", data.token)
         router.push("/admin/dashboard")
       } else {
         setError(data.message || "Neispravni podaci za prijavu")
@@ -72,9 +71,9 @@ export default function AdminLogin() {
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
+                placeholder="Unesite korisničko ime"
                 required
                 disabled={isLoading}
-                placeholder="Unesite korisničko ime"
               />
             </div>
             <div className="space-y-2">
@@ -85,9 +84,9 @@ export default function AdminLogin() {
                   type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Unesite lozinku"
                   required
                   disabled={isLoading}
-                  placeholder="Unesite lozinku"
                 />
                 <Button
                   type="button"
@@ -109,13 +108,20 @@ export default function AdminLogin() {
             )}
 
             <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? "Prijavljivanje..." : "Prijavite se"}
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Prijavljivanje...
+                </>
+              ) : (
+                "Prijavite se"
+              )}
             </Button>
           </form>
 
           <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-            <h4 className="font-semibold text-blue-900 mb-2">Demo pristup:</h4>
-            <p className="text-sm text-blue-700">
+            <p className="text-sm text-blue-800 font-medium mb-2">Demo pristup:</p>
+            <p className="text-xs text-blue-600">
               <strong>Korisničko ime:</strong> admin
               <br />
               <strong>Lozinka:</strong> plumber2024
