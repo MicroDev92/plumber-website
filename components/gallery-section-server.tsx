@@ -1,40 +1,32 @@
-import { Badge } from "@/components/ui/badge"
-import { Card, CardContent } from "@/components/ui/card"
-import { ImageIcon } from "lucide-react"
-import { getGalleryPhotos } from "@/lib/gallery"
+import { createServerClient } from "@/lib/supabase"
 import { GallerySection } from "./gallery-section"
 
-export async function GallerySectionServer() {
-  // Fetch photos server-side for faster initial load
-  const photos = await getGalleryPhotos()
+async function getGalleryPhotos() {
+  try {
+    const supabase = createServerClient()
 
-  return (
-    <section id="gallery" className="py-20 bg-slate-50">
-      <div className="container mx-auto px-4">
-        <div className="text-center mb-16">
-          <h3 className="text-3xl font-bold text-slate-900 mb-4">Naši radovi</h3>
-          <p className="text-lg text-slate-600">
-            Pogledajte primere naših profesionalnih vodoinstalaterskih radova i popravki
-          </p>
-          {photos.length > 0 && (
-            <Badge variant="outline" className="mt-2">
-              {photos.length} {photos.length === 1 ? "fotografija" : "fotografija"}
-            </Badge>
-          )}
-        </div>
+    const { data: photos, error } = await supabase
+      .from("gallery_photos")
+      .select("*")
+      .order("created_at", { ascending: false })
+      .limit(6)
 
-        {photos.length === 0 ? (
-          <Card className="max-w-md mx-auto">
-            <CardContent className="p-8 text-center">
-              <ImageIcon className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-              <h4 className="text-lg font-semibold text-gray-900 mb-2">Nema fotografija</h4>
-              <p className="text-gray-600">Fotografije će biti dodane uskoro.</p>
-            </CardContent>
-          </Card>
-        ) : (
-          <GallerySection initialPhotos={photos} />
-        )}
-      </div>
-    </section>
-  )
+    if (error) {
+      console.error("Gallery fetch error:", error)
+      return []
+    }
+
+    return photos || []
+  } catch (error) {
+    console.error("Gallery server error:", error)
+    return []
+  }
 }
+
+export async function GallerySectionServer() {
+  const photos = await getGalleryPhotos()
+  return <GallerySection initialPhotos={photos} />
+}
+
+// Export with both names for compatibility
+export { GallerySectionServer as GallerySection }
