@@ -7,6 +7,7 @@ export async function GallerySectionServer() {
     const { data: photos, error } = await supabase
       .from("gallery_photos")
       .select("*")
+      .eq("is_published", true)
       .order("created_at", { ascending: false })
 
     if (error) {

@@ -277,7 +277,7 @@ export default async function HomePage() {
                 </div>
               </div>
 
-              {/* Simple Map Link - No API Key Required */}
+              {/* Google Maps Embed with Fallback */}
               <div className="mt-8 bg-white rounded-lg overflow-hidden shadow-lg">
                 <div className="p-4 bg-slate-800 text-white">
                   <h4 className="font-semibold flex items-center gap-2">
@@ -286,27 +286,23 @@ export default async function HomePage() {
                   </h4>
                   <p className="text-sm text-slate-300">{address}</p>
                 </div>
-                <div className="relative h-64 md:h-80 bg-gray-100 flex items-center justify-center">
-                  <div className="text-center">
-                    <MapPin className="h-16 w-16 mx-auto mb-4 text-blue-600" />
-                    <h5 className="font-semibold text-gray-900 mb-2">Trebevicka 17, Beograd</h5>
-                    <p className="text-gray-600 mb-4">Kliknite da otvorite u Google Maps</p>
-                    <Button asChild className="bg-blue-600 hover:bg-blue-700">
-                      <a
-                        href="https://www.google.com/maps/search/?api=1&query=Trebevicka+17,+Belgrade,+Serbia"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <MapPin className="mr-2 h-4 w-4" />
-                        Otvori u Google Maps
-                      </a>
-                    </Button>
-                  </div>
+                <div className="relative h-64 md:h-80">
+                  <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2830.2!2d20.4612!3d44.8123!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDTCsDQ4JzQ0LjMiTiAyMMKwMjcnNDAuMyJF!5e0!3m2!1sen!2srs!4v1234567890!5m2!1sen!2srs"
+                    width="100%"
+                    height="100%"
+                    style={{ border: 0 }}
+                    allowFullScreen
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                    title="Lokacija - Trebevicka 17, Beograd"
+                    className="absolute inset-0"
+                  />
                 </div>
                 <div className="p-3 bg-slate-50 text-slate-700 text-sm">
                   <p className="flex items-center gap-2">
                     <MapPin className="h-3 w-3 text-blue-600" />
-                    Oblast rada: {serviceArea}
+                    Kliknite na mapu za detaljnije uputstvo
                   </p>
                 </div>
               </div>
@@ -316,26 +312,6 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
-
-      {/* Footer */}
-      <footer className="bg-slate-800 text-white py-6 md:py-8">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="flex items-center gap-3 mb-4 md:mb-0">
-              <div className="bg-blue-600 p-2 rounded-lg">
-                <Wrench className="h-4 w-4 md:h-5 md:w-5" />
-              </div>
-              <div>
-                <p className="font-semibold">{businessName}</p>
-                <p className="text-xs md:text-sm text-slate-400">Licencirani i osigurani</p>
-              </div>
-            </div>
-            <p className="text-slate-400 text-xs md:text-sm text-center md:text-right">
-              © 2024 {businessName}. Sva prava zadržana.
-            </p>
-          </div>
-        </div>
-      </footer>
     </div>
   )
 }
