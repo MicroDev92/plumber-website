@@ -277,7 +277,7 @@ export default async function HomePage() {
                 </div>
               </div>
 
-              {/* Google Maps - Using OpenStreetMap instead */}
+              {/* Simple Map Link - No API Key Required */}
               <div className="mt-8 bg-white rounded-lg overflow-hidden shadow-lg">
                 <div className="p-4 bg-slate-800 text-white">
                   <h4 className="font-semibold flex items-center gap-2">
@@ -286,22 +286,27 @@ export default async function HomePage() {
                   </h4>
                   <p className="text-sm text-slate-300">{address}</p>
                 </div>
-                <div className="relative h-64 md:h-80">
-                  <iframe
-                    src={`https://www.openstreetmap.org/export/embed.html?bbox=20.4500%2C44.8000%2C20.4700%2C44.8200&layer=mapnik&marker=44.8100%2C20.4600`}
-                    width="100%"
-                    height="100%"
-                    style={{ border: 0 }}
-                    allowFullScreen
-                    loading="lazy"
-                    title="Lokacija - Trebevicka 17, Beograd"
-                    className="absolute inset-0"
-                  />
+                <div className="relative h-64 md:h-80 bg-gray-100 flex items-center justify-center">
+                  <div className="text-center">
+                    <MapPin className="h-16 w-16 mx-auto mb-4 text-blue-600" />
+                    <h5 className="font-semibold text-gray-900 mb-2">Trebevicka 17, Beograd</h5>
+                    <p className="text-gray-600 mb-4">Kliknite da otvorite u Google Maps</p>
+                    <Button asChild className="bg-blue-600 hover:bg-blue-700">
+                      <a
+                        href="https://www.google.com/maps/search/?api=1&query=Trebevicka+17,+Belgrade,+Serbia"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <MapPin className="mr-2 h-4 w-4" />
+                        Otvori u Google Maps
+                      </a>
+                    </Button>
+                  </div>
                 </div>
                 <div className="p-3 bg-slate-50 text-slate-700 text-sm">
                   <p className="flex items-center gap-2">
                     <MapPin className="h-3 w-3 text-blue-600" />
-                    Kliknite na mapu za detaljnije uputstvo
+                    Oblast rada: {serviceArea}
                   </p>
                 </div>
               </div>

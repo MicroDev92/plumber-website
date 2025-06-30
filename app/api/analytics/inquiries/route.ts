@@ -13,12 +13,12 @@ export async function GET() {
       .select("*", { count: "exact", head: true })
 
     if (totalError) {
-      console.error("❌ Error fetching total inquiries:", totalError)
+      console.error("❌ Error fetching total count:", totalError)
     } else {
       console.log("📊 Total inquiries in DB:", totalCount)
     }
 
-    // Get monthly inquiries (last 30 days)
+    // Get monthly inquiries
     const thirtyDaysAgo = new Date()
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30)
 
@@ -28,27 +28,27 @@ export async function GET() {
       .gte("created_at", thirtyDaysAgo.toISOString())
 
     if (monthlyError) {
-      console.error("❌ Error fetching monthly inquiries:", monthlyError)
+      console.error("❌ Error fetching monthly count:", monthlyError)
     } else {
-      console.log("📅 Monthly inquiries (last 30 days):", monthlyCount)
+      console.log("📅 Monthly inquiries:", monthlyCount)
     }
 
-    // Get pending inquiries
+    // Get pending inquiries with detailed logging
     const { count: pendingCount, error: pendingError } = await supabase
       .from("contact_inquiries")
       .select("*", { count: "exact", head: true })
       .eq("status", "pending")
 
     if (pendingError) {
-      console.error("❌ Error fetching pending inquiries:", pendingError)
+      console.error("❌ Error fetching pending count:", pendingError)
     } else {
-      console.log("⏳ Pending inquiries:", pendingCount)
+      console.log("⏳ Pending inquiries count:", pendingCount)
     }
 
-    // Also fetch actual pending records to debug
+    // Also fetch actual pending records to see what's there
     const { data: pendingRecords, error: recordsError } = await supabase
       .from("contact_inquiries")
-      .select("id, name, status, created_at")
+      .select("id, name, email, status, created_at")
       .eq("status", "pending")
 
     if (recordsError) {
@@ -58,32 +58,17 @@ export async function GET() {
     }
 
     const result = {
-      success: true,
       total: totalCount || 0,
       monthly: monthlyCount || 0,
       pending: pendingCount || 0,
       source: "database",
-      debug: {
-        totalError: totalError?.message,
-        monthlyError: monthlyError?.message,
-        pendingError: pendingError?.message,
-        pendingRecords: pendingRecords || [],
-      },
     }
 
     console.log("✅ Final analytics result:", result)
 
     return NextResponse.json(result)
   } catch (error) {
-    console.error("💥 Analytics API error:", error)
-
-    return NextResponse.json({
-      success: false,
-      total: 0,
-      monthly: 0,
-      pending: 0,
-      source: "fallback",
-      error: error instanceof Error ? error.message : "Unknown error",
-    })
+    console.error("💥 Inquiries analytics error:", error)
+    return NextResponse.json({ total: 0, monthly: 0, pending: 0, source: "fallback" }, { status: 500 })
   }
 }
