@@ -38,6 +38,10 @@ import {
   AlertCircle,
   Save,
   Loader2,
+  Home,
+  MessageSquare,
+  Star,
+  Settings,
 } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
@@ -473,183 +477,233 @@ export default function AdminDashboard() {
   return (
     <>
       <div className="min-h-screen bg-gray-50">
-        {/* Header */}
-        <header className="bg-white shadow-sm border-b">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center py-4">
-              <div className="flex items-center gap-3">
-                <div className="bg-blue-600 p-2 rounded-lg">
-                  <Wrench className="h-6 w-6 text-white" />
+        {/* Mobile-First Header */}
+        <header className="bg-white shadow-sm border-b sticky top-0 z-40">
+          <div className="px-4 sm:px-6 lg:px-8">
+            <div className="flex justify-between items-center h-14 sm:h-16">
+              {/* Mobile Logo */}
+              <div className="flex items-center gap-2 sm:gap-3">
+                <div className="bg-blue-600 p-1.5 sm:p-2 rounded-lg">
+                  <Wrench className="h-4 w-4 sm:h-6 sm:w-6 text-white" />
                 </div>
-                <div>
-                  <h1 className="text-xl font-bold text-gray-900">Admin panel</h1>
-                  <p className="text-sm text-gray-500">Vodoinstalater Žekić</p>
+                <div className="hidden sm:block">
+                  <h1 className="text-lg sm:text-xl font-bold text-gray-900">Admin panel</h1>
+                  <p className="text-xs sm:text-sm text-gray-500">Vodoinstalater Žekić</p>
+                </div>
+                <div className="sm:hidden">
+                  <h1 className="text-sm font-bold text-gray-900">Admin</h1>
                 </div>
               </div>
-              <div className="flex items-center gap-4">
-                <div className="text-sm text-gray-500">
-                  {analytics.lastUpdated && <span>Poslednje ažuriranje: {analytics.lastUpdated}</span>}
-                </div>
-                <Button variant="outline" size="sm" onClick={fetchAnalytics} disabled={analytics.isLoading}>
+
+              {/* Mobile Actions */}
+              <div className="flex items-center gap-1 sm:gap-4">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={fetchAnalytics}
+                  disabled={analytics.isLoading}
+                  className="hidden sm:flex bg-transparent"
+                >
                   <RefreshCw className={`h-4 w-4 mr-2 ${analytics.isLoading ? "animate-spin" : ""}`} />
                   Osveži
                 </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={fetchAnalytics}
+                  disabled={analytics.isLoading}
+                  className="sm:hidden p-2 bg-transparent"
+                >
+                  <RefreshCw className={`h-4 w-4 ${analytics.isLoading ? "animate-spin" : ""}`} />
+                </Button>
+
                 <Link href="/">
-                  <Button variant="outline" size="sm">
+                  <Button variant="outline" size="sm" className="hidden sm:flex bg-transparent">
                     Pogledaj sajt
                   </Button>
+                  <Button variant="outline" size="sm" className="sm:hidden p-2 bg-transparent">
+                    <Home className="h-4 w-4" />
+                  </Button>
                 </Link>
-                <Button variant="outline" size="sm" onClick={handleLogout}>
+
+                <Button variant="outline" size="sm" onClick={handleLogout} className="hidden sm:flex bg-transparent">
                   <LogOut className="h-4 w-4 mr-2" />
                   Odjava
+                </Button>
+                <Button variant="outline" size="sm" onClick={handleLogout} className="sm:hidden p-2 bg-transparent">
+                  <LogOut className="h-4 w-4" />
                 </Button>
               </div>
             </div>
           </div>
         </header>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="px-4 sm:px-6 lg:px-8 py-4 sm:py-8 max-w-7xl mx-auto">
           {/* Delete Status Alert */}
           {deleteStatus.type && (
             <div
-              className={`mb-6 p-4 rounded-lg flex items-center gap-3 ${
+              className={`mb-4 sm:mb-6 p-3 sm:p-4 rounded-lg flex items-center gap-3 ${
                 deleteStatus.type === "success"
                   ? "bg-green-50 border border-green-200"
                   : "bg-red-50 border border-red-200"
               }`}
             >
               {deleteStatus.type === "success" ? (
-                <CheckCircle className="h-5 w-5 text-green-600" />
+                <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5 text-green-600" />
               ) : (
-                <AlertCircle className="h-5 w-5 text-red-600" />
+                <AlertCircle className="h-4 w-4 sm:h-5 sm:w-5 text-red-600" />
               )}
-              <span className={deleteStatus.type === "success" ? "text-green-800" : "text-red-800"}>
+              <span className={`text-sm ${deleteStatus.type === "success" ? "text-green-800" : "text-red-800"}`}>
                 {deleteStatus.message}
               </span>
             </div>
           )}
 
           {/* Data Source Badge */}
-          <div className="mb-6">
-            <Badge variant={analytics.dataSource === "vercel" ? "default" : "secondary"} className="mb-2">
+          <div className="mb-4 sm:mb-6">
+            <Badge variant={analytics.dataSource === "vercel" ? "default" : "secondary"} className="mb-2 text-xs">
               {analytics.dataSource === "vercel" && "📊 Vercel Analytics"}
               {analytics.dataSource === "production" && "🚀 Produkcijski podaci"}
               {analytics.dataSource === "demo" && "🎯 Demo podaci"}
               {analytics.dataSource === "fallback" && "⚠️ Rezervni podaci"}
               {analytics.dataSource === "loading" && "⏳ Učitavanje..."}
             </Badge>
-            <p className="text-sm text-gray-600">
+            <p className="text-xs sm:text-sm text-gray-600">
               Koriste se besplatni izvori podataka. Za naprednu analitiku, dodajte Google Analytics.
             </p>
           </div>
 
-          {/* Stats Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-            <Card>
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600">Ukupno fotografija</p>
-                    <p className="text-2xl font-bold text-gray-900">{analytics.isLoading ? "..." : photos.length}</p>
+          {/* Mobile-Optimized Stats Cards */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-6 sm:mb-8">
+            <Card className="p-3 sm:p-0">
+              <CardContent className="p-3 sm:p-6">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                  <div className="mb-2 sm:mb-0">
+                    <p className="text-xs sm:text-sm font-medium text-gray-600">Fotografije</p>
+                    <p className="text-lg sm:text-2xl font-bold text-gray-900">
+                      {analytics.isLoading ? "..." : photos.length}
+                    </p>
                     <p className="text-xs text-green-600 flex items-center mt-1">
                       <TrendingUp className="h-3 w-3 mr-1" />
-                      Aktivno praćenje
+                      <span className="hidden sm:inline">Aktivno praćenje</span>
+                      <span className="sm:hidden">Aktivno</span>
                     </p>
                   </div>
-                  <ImageIcon className="h-8 w-8 text-blue-600" />
+                  <ImageIcon className="h-6 w-6 sm:h-8 sm:w-8 text-blue-600 self-end sm:self-auto" />
                 </div>
               </CardContent>
             </Card>
 
-            <Card>
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600">Mesečne posete</p>
-                    <p className="text-2xl font-bold text-gray-900">
+            <Card className="p-3 sm:p-0">
+              <CardContent className="p-3 sm:p-6">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                  <div className="mb-2 sm:mb-0">
+                    <p className="text-xs sm:text-sm font-medium text-gray-600">Posete</p>
+                    <p className="text-lg sm:text-2xl font-bold text-gray-900">
                       {analytics.isLoading ? "..." : analytics.monthlyVisits.toLocaleString()}
                     </p>
                     <p className="text-xs text-blue-600 flex items-center mt-1">
                       <BarChart3 className="h-3 w-3 mr-1" />
-                      Poslednji mesec
+                      <span className="hidden sm:inline">Poslednji mesec</span>
+                      <span className="sm:hidden">Mesečno</span>
                     </p>
                   </div>
-                  <BarChart3 className="h-8 w-8 text-green-600" />
+                  <BarChart3 className="h-6 w-6 sm:h-8 sm:w-8 text-green-600 self-end sm:self-auto" />
                 </div>
               </CardContent>
             </Card>
 
-            <Card>
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600">Mesečni upiti</p>
-                    <p className="text-2xl font-bold text-gray-900">
+            <Card className="p-3 sm:p-0">
+              <CardContent className="p-3 sm:p-6">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                  <div className="mb-2 sm:mb-0">
+                    <p className="text-xs sm:text-sm font-medium text-gray-600">Upiti</p>
+                    <p className="text-lg sm:text-2xl font-bold text-gray-900">
                       {analytics.isLoading ? "..." : analytics.totalInquiries}
                     </p>
                     <p className="text-xs text-orange-600 flex items-center mt-1">
                       <Mail className="h-3 w-3 mr-1" />
-                      Kontakt forma
+                      <span className="hidden sm:inline">Kontakt forma</span>
+                      <span className="sm:hidden">Ukupno</span>
                     </p>
                   </div>
-                  <Mail className="h-8 w-8 text-orange-600" />
+                  <Mail className="h-6 w-6 sm:h-8 sm:w-8 text-orange-600 self-end sm:self-auto" />
                 </div>
               </CardContent>
             </Card>
 
-            <Card>
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600">Upiti na čekanju</p>
-                    <p className="text-2xl font-bold text-gray-900">
+            <Card className="p-3 sm:p-0">
+              <CardContent className="p-3 sm:p-6">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                  <div className="mb-2 sm:mb-0">
+                    <p className="text-xs sm:text-sm font-medium text-gray-600">Na čekanju</p>
+                    <p className="text-lg sm:text-2xl font-bold text-gray-900">
                       {analytics.isLoading ? "..." : analytics.pendingInquiries}
                     </p>
                     <p className="text-xs text-purple-600 flex items-center mt-1">
                       <Phone className="h-3 w-3 mr-1" />
-                      Zahtevaju odgovor
+                      <span className="hidden sm:inline">Zahtevaju odgovor</span>
+                      <span className="sm:hidden">Odgovor</span>
                     </p>
                   </div>
-                  <Phone className="h-8 w-8 text-purple-600" />
+                  <Phone className="h-6 w-6 sm:h-8 sm:w-8 text-purple-600 self-end sm:self-auto" />
                 </div>
               </CardContent>
             </Card>
           </div>
 
-          {/* Main Content */}
-          <Tabs defaultValue="gallery" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-5">
-              <TabsTrigger value="gallery">Galerija fotografija</TabsTrigger>
-              <TabsTrigger value="inquiries">Upiti</TabsTrigger>
-              <TabsTrigger value="testimonials">Recenzije</TabsTrigger>
-              <TabsTrigger value="services">Usluge</TabsTrigger>
-              <TabsTrigger value="settings">Podešavanja</TabsTrigger>
+          {/* Mobile-Optimized Tabs */}
+          <Tabs defaultValue="gallery" className="space-y-4 sm:space-y-6">
+            <TabsList className="grid w-full grid-cols-3 sm:grid-cols-5 h-auto p-1">
+              <TabsTrigger value="gallery" className="text-xs sm:text-sm p-2 sm:p-3">
+                <ImageIcon className="h-4 w-4 sm:mr-2" />
+                <span className="hidden sm:inline">Galerija</span>
+              </TabsTrigger>
+              <TabsTrigger value="inquiries" className="text-xs sm:text-sm p-2 sm:p-3">
+                <MessageSquare className="h-4 w-4 sm:mr-2" />
+                <span className="hidden sm:inline">Upiti</span>
+              </TabsTrigger>
+              <TabsTrigger value="testimonials" className="text-xs sm:text-sm p-2 sm:p-3">
+                <Star className="h-4 w-4 sm:mr-2" />
+                <span className="hidden sm:inline">Recenzije</span>
+              </TabsTrigger>
+              <TabsTrigger value="services" className="text-xs sm:text-sm p-2 sm:p-3 hidden sm:flex">
+                <Wrench className="h-4 w-4 sm:mr-2" />
+                <span className="hidden sm:inline">Usluge</span>
+              </TabsTrigger>
+              <TabsTrigger value="settings" className="text-xs sm:text-sm p-2 sm:p-3">
+                <Settings className="h-4 w-4 sm:mr-2" />
+                <span className="hidden sm:inline">Podešavanja</span>
+              </TabsTrigger>
             </TabsList>
 
-            <TabsContent value="gallery" className="space-y-6">
-              <div className="flex justify-between items-center">
+            <TabsContent value="gallery" className="space-y-4 sm:space-y-6">
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
                 <div>
-                  <h2 className="text-2xl font-bold text-gray-900">Galerija fotografija</h2>
-                  <p className="text-gray-600">Upravljajte fotografijama vaših radova</p>
+                  <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Galerija fotografija</h2>
+                  <p className="text-sm sm:text-base text-gray-600">Upravljajte fotografijama vaših radova</p>
                 </div>
 
                 <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
                   <DialogTrigger asChild>
-                    <Button className="bg-blue-600 hover:bg-blue-700">
+                    <Button className="bg-blue-600 hover:bg-blue-700 w-full sm:w-auto">
                       <Plus className="h-4 w-4 mr-2" />
-                      Dodaj fotografiju
+                      <span className="hidden sm:inline">Dodaj fotografiju</span>
+                      <span className="sm:hidden">Dodaj</span>
                     </Button>
                   </DialogTrigger>
-                  <DialogContent>
+                  <DialogContent className="w-[95vw] max-w-md">
                     <DialogHeader>
-                      <DialogTitle>Dodaj novu fotografiju</DialogTitle>
-                      <DialogDescription>
+                      <DialogTitle className="text-lg">Dodaj novu fotografiju</DialogTitle>
+                      <DialogDescription className="text-sm">
                         Otpremite novu fotografiju da pokažete vaše vodoinstalaterske radove
                       </DialogDescription>
                     </DialogHeader>
                     <form onSubmit={handlePhotoUpload} className="space-y-4">
                       <div>
-                        <Label htmlFor="photo-title">Naslov</Label>
+                        <Label htmlFor="photo-title" className="text-sm">
+                          Naslov
+                        </Label>
                         <Input
                           id="photo-title"
                           value={newPhoto.title}
@@ -657,10 +711,13 @@ export default function AdminDashboard() {
                           placeholder="npr. Ugradnja kupatila"
                           required
                           disabled={isUploading}
+                          className="text-sm"
                         />
                       </div>
                       <div>
-                        <Label htmlFor="photo-description">Opis</Label>
+                        <Label htmlFor="photo-description" className="text-sm">
+                          Opis
+                        </Label>
                         <Textarea
                           id="photo-description"
                           value={newPhoto.description}
@@ -668,10 +725,13 @@ export default function AdminDashboard() {
                           placeholder="Kratak opis rada"
                           required
                           disabled={isUploading}
+                          className="text-sm min-h-[80px]"
                         />
                       </div>
                       <div>
-                        <Label htmlFor="photo-file">Fotografija</Label>
+                        <Label htmlFor="photo-file" className="text-sm">
+                          Fotografija
+                        </Label>
                         <Input
                           id="photo-file"
                           type="file"
@@ -679,9 +739,10 @@ export default function AdminDashboard() {
                           onChange={(e) => setNewPhoto((prev) => ({ ...prev, file: e.target.files?.[0] || null }))}
                           required
                           disabled={isUploading}
+                          className="text-sm"
                         />
                         {newPhoto.file && (
-                          <p className="text-sm text-gray-500 mt-1">Izabrana datoteka: {newPhoto.file.name}</p>
+                          <p className="text-xs text-gray-500 mt-1">Izabrana datoteka: {newPhoto.file.name}</p>
                         )}
                       </div>
                       <Button type="submit" className="w-full" disabled={isUploading}>
@@ -704,18 +765,18 @@ export default function AdminDashboard() {
 
               {photos.length === 0 ? (
                 <Card>
-                  <CardContent className="p-8 text-center">
-                    <ImageIcon className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">Nema fotografija</h3>
-                    <p className="text-gray-600 mb-4">Dodajte prve fotografije vaših radova</p>
-                    <Button onClick={() => setDialogOpen(true)}>
+                  <CardContent className="p-6 sm:p-8 text-center">
+                    <ImageIcon className="h-10 w-10 sm:h-12 sm:w-12 text-gray-400 mx-auto mb-4" />
+                    <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-2">Nema fotografija</h3>
+                    <p className="text-sm sm:text-base text-gray-600 mb-4">Dodajte prve fotografije vaših radova</p>
+                    <Button onClick={() => setDialogOpen(true)} className="w-full sm:w-auto">
                       <Plus className="h-4 w-4 mr-2" />
                       Dodaj prvu fotografiju
                     </Button>
                   </CardContent>
                 </Card>
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                   {photos.map((photo, index) => (
                     <Card key={photo.id} className="overflow-hidden group">
                       <div className="relative">
@@ -724,42 +785,42 @@ export default function AdminDashboard() {
                           alt={photo.title}
                           width={400}
                           height={300}
-                          className="w-full h-48 object-cover cursor-pointer transition-transform group-hover:scale-105"
+                          className="w-full h-40 sm:h-48 object-cover cursor-pointer transition-transform group-hover:scale-105"
                           onClick={() => openLightbox(index)}
                           onError={(e) => {
                             const target = e.target as HTMLImageElement
                             target.src = "/placeholder.svg?height=300&width=400"
                           }}
                         />
-                        <div className="absolute top-2 right-2 flex gap-2">
+                        <div className="absolute top-2 right-2 flex gap-1 sm:gap-2">
                           <Button
                             size="sm"
                             variant="secondary"
-                            className="h-8 w-8 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                            className="h-7 w-7 sm:h-8 sm:w-8 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
                             onClick={() => openLightbox(index)}
                           >
-                            <Expand className="h-4 w-4" />
+                            <Expand className="h-3 w-3 sm:h-4 sm:w-4" />
                           </Button>
                           <Button
                             size="sm"
                             variant="secondary"
-                            className="h-8 w-8 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                            className="h-7 w-7 sm:h-8 sm:w-8 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
                           >
-                            <Edit className="h-4 w-4" />
+                            <Edit className="h-3 w-3 sm:h-4 sm:w-4" />
                           </Button>
                           <Button
                             size="sm"
                             variant="destructive"
-                            className="h-8 w-8 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                            className="h-7 w-7 sm:h-8 sm:w-8 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
                             onClick={() => deletePhoto(photo.id)}
                           >
-                            <Trash2 className="h-4 w-4" />
+                            <Trash2 className="h-3 w-3 sm:h-4 sm:w-4" />
                           </Button>
                         </div>
                       </div>
-                      <CardContent className="p-4">
-                        <h3 className="font-semibold text-gray-900 mb-1">{photo.title}</h3>
-                        <p className="text-sm text-gray-600">{photo.description}</p>
+                      <CardContent className="p-3 sm:p-4">
+                        <h3 className="font-semibold text-gray-900 mb-1 text-sm sm:text-base">{photo.title}</h3>
+                        <p className="text-xs sm:text-sm text-gray-600 line-clamp-2">{photo.description}</p>
                         {photo.created_at && (
                           <p className="text-xs text-gray-400 mt-2">
                             Dodano: {new Date(photo.created_at).toLocaleDateString("sr-RS")}
@@ -772,63 +833,71 @@ export default function AdminDashboard() {
               )}
             </TabsContent>
 
-            <TabsContent value="inquiries" className="space-y-6">
-              <div className="flex justify-between items-center">
+            <TabsContent value="inquiries" className="space-y-4 sm:space-y-6">
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
                 <div>
-                  <h2 className="text-2xl font-bold text-gray-900">Upravljanje upitima</h2>
-                  <p className="text-gray-600">Pregledajte i odgovorite na kontakt upite</p>
+                  <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Upravljanje upitima</h2>
+                  <p className="text-sm sm:text-base text-gray-600">Pregledajte i odgovorite na kontakt upite</p>
                 </div>
-                <Button variant="outline" size="sm" onClick={fetchInquiries} disabled={isLoadingInquiries}>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={fetchInquiries}
+                  disabled={isLoadingInquiries}
+                  className="w-full sm:w-auto bg-transparent"
+                >
                   <RefreshCw className={`h-4 w-4 mr-2 ${isLoadingInquiries ? "animate-spin" : ""}`} />
                   Osveži
                 </Button>
               </div>
 
               {isLoadingInquiries ? (
-                <div className="flex justify-center items-center py-12">
-                  <RefreshCw className="h-8 w-8 animate-spin text-blue-600" />
-                  <span className="ml-2 text-gray-600">Učitavanje upita...</span>
+                <div className="flex justify-center items-center py-8 sm:py-12">
+                  <RefreshCw className="h-6 w-6 sm:h-8 sm:w-8 animate-spin text-blue-600" />
+                  <span className="ml-2 text-sm sm:text-base text-gray-600">Učitavanje upita...</span>
                 </div>
               ) : inquiries.length === 0 ? (
                 <Card>
-                  <CardContent className="p-8 text-center">
-                    <Mail className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">Nema upita</h3>
-                    <p className="text-gray-600">Kada klijenti pošalju kontakt formu, upiti će se pojaviti ovde</p>
+                  <CardContent className="p-6 sm:p-8 text-center">
+                    <Mail className="h-10 w-10 sm:h-12 sm:w-12 text-gray-400 mx-auto mb-4" />
+                    <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-2">Nema upita</h3>
+                    <p className="text-sm sm:text-base text-gray-600">
+                      Kada klijenti pošalju kontakt formu, upiti će se pojaviti ovde
+                    </p>
                   </CardContent>
                 </Card>
               ) : (
-                <div className="space-y-4">
+                <div className="space-y-3 sm:space-y-4">
                   {inquiries.map((inquiry) => (
-                    <Card key={inquiry.id} className="p-6">
-                      <div className="flex justify-between items-start mb-4">
-                        <div>
-                          <h3 className="font-semibold text-lg">{inquiry.name}</h3>
-                          <p className="text-gray-600">{inquiry.email}</p>
-                          {inquiry.phone && <p className="text-gray-600">{inquiry.phone}</p>}
+                    <Card key={inquiry.id} className="p-4 sm:p-6">
+                      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 sm:gap-4 mb-4">
+                        <div className="flex-1">
+                          <h3 className="font-semibold text-base sm:text-lg">{inquiry.name}</h3>
+                          <p className="text-sm text-gray-600">{inquiry.email}</p>
+                          {inquiry.phone && <p className="text-sm text-gray-600">{inquiry.phone}</p>}
                           {inquiry.service && (
-                            <Badge variant="outline" className="mt-1">
+                            <Badge variant="outline" className="mt-1 text-xs">
                               {inquiry.service}
                             </Badge>
                           )}
                         </div>
-                        <div className="text-right">
-                          <Badge variant={inquiry.status === "pending" ? "destructive" : "default"}>
+                        <div className="text-left sm:text-right">
+                          <Badge variant={inquiry.status === "pending" ? "destructive" : "default"} className="text-xs">
                             {inquiry.status === "pending" ? "Na čekanju" : "Obrađeno"}
                           </Badge>
-                          <p className="text-sm text-gray-500 mt-1">
+                          <p className="text-xs text-gray-500 mt-1">
                             {new Date(inquiry.created_at).toLocaleDateString("sr-RS")}
                           </p>
                         </div>
                       </div>
 
                       <div className="mb-4">
-                        <h4 className="font-medium mb-2">Poruka:</h4>
-                        <p className="text-gray-700 bg-gray-50 p-3 rounded-lg">{inquiry.message}</p>
+                        <h4 className="font-medium mb-2 text-sm">Poruka:</h4>
+                        <p className="text-sm text-gray-700 bg-gray-50 p-3 rounded-lg">{inquiry.message}</p>
                       </div>
 
-                      <div className="flex gap-2">
-                        <Button size="sm" variant="outline">
+                      <div className="flex flex-col sm:flex-row gap-2">
+                        <Button size="sm" variant="outline" className="w-full sm:w-auto bg-transparent">
                           <Mail className="h-4 w-4 mr-2" />
                           Odgovori
                         </Button>
@@ -838,6 +907,7 @@ export default function AdminDashboard() {
                           onClick={() =>
                             updateInquiryStatus(inquiry.id, inquiry.status === "pending" ? "resolved" : "pending")
                           }
+                          className="w-full sm:w-auto"
                         >
                           {inquiry.status === "pending" ? "Označi kao obrađeno" : "Označi kao na čekanju"}
                         </Button>
@@ -848,29 +918,33 @@ export default function AdminDashboard() {
               )}
             </TabsContent>
 
-            <TabsContent value="testimonials" className="space-y-6">
+            <TabsContent value="testimonials" className="space-y-4 sm:space-y-6">
               <TestimonialsAdmin />
             </TabsContent>
 
-            <TabsContent value="services" className="space-y-6">
+            <TabsContent value="services" className="space-y-4 sm:space-y-6">
               <Card>
                 <CardHeader>
-                  <CardTitle>Upravljanje uslugama</CardTitle>
-                  <CardDescription>Upravljajte vašim vodoinstalaterskim uslugama i cenama</CardDescription>
+                  <CardTitle className="text-lg sm:text-xl">Upravljanje uslugama</CardTitle>
+                  <CardDescription className="text-sm">
+                    Upravljajte vašim vodoinstalaterskim uslugama i cenama
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-600">Funkcije upravljanja uslugama uskoro...</p>
+                  <p className="text-sm text-gray-600">Funkcije upravljanja uslugama uskoro...</p>
                 </CardContent>
               </Card>
             </TabsContent>
 
-            <TabsContent value="settings" className="space-y-6">
+            <TabsContent value="settings" className="space-y-4 sm:space-y-6">
               <Card>
                 <CardHeader>
-                  <CardTitle>Podešavanja sajta</CardTitle>
-                  <CardDescription>Ažurirajte informacije o vašem poslu i kontakt podatke</CardDescription>
+                  <CardTitle className="text-lg sm:text-xl">Podešavanja sajta</CardTitle>
+                  <CardDescription className="text-sm">
+                    Ažurirajte informacije o vašem poslu i kontakt podatke
+                  </CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-6">
+                <CardContent className="space-y-4 sm:space-y-6">
                   {/* Settings Status Alert */}
                   {settingsStatus.type && (
                     <Alert
@@ -884,7 +958,7 @@ export default function AdminDashboard() {
                         <AlertCircle className="h-4 w-4 text-red-600" />
                       )}
                       <AlertDescription
-                        className={settingsStatus.type === "success" ? "text-green-800" : "text-red-800"}
+                        className={`text-sm ${settingsStatus.type === "success" ? "text-green-800" : "text-red-800"}`}
                       >
                         {settingsStatus.message}
                       </AlertDescription>
@@ -892,80 +966,101 @@ export default function AdminDashboard() {
                   )}
 
                   {isLoadingSettings ? (
-                    <div className="flex justify-center items-center py-8">
-                      <Loader2 className="h-6 w-6 animate-spin text-blue-600" />
-                      <span className="ml-2 text-gray-600">Učitavanje podešavanja...</span>
+                    <div className="flex justify-center items-center py-6 sm:py-8">
+                      <Loader2 className="h-5 w-5 sm:h-6 sm:w-6 animate-spin text-blue-600" />
+                      <span className="ml-2 text-sm text-gray-600">Učitavanje podešavanja...</span>
                     </div>
                   ) : (
                     <>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                          <Label htmlFor="business-name">Naziv firme</Label>
+                          <Label htmlFor="business-name" className="text-sm">
+                            Naziv firme
+                          </Label>
                           <Input
                             id="business-name"
                             value={settings.business_name}
                             onChange={(e) => handleSettingsChange("business_name", e.target.value)}
                             placeholder="Vodoinstalater Žekić"
+                            className="text-sm"
                           />
                         </div>
                         <div>
-                          <Label htmlFor="phone">Broj telefona</Label>
+                          <Label htmlFor="phone" className="text-sm">
+                            Broj telefona
+                          </Label>
                           <Input
                             id="phone"
                             value={settings.phone}
                             onChange={(e) => handleSettingsChange("phone", e.target.value)}
                             placeholder="+381 60 123 4567"
+                            className="text-sm"
                           />
                         </div>
                         <div>
-                          <Label htmlFor="email">Email</Label>
+                          <Label htmlFor="email" className="text-sm">
+                            Email
+                          </Label>
                           <Input
                             id="email"
                             type="email"
                             value={settings.email}
                             onChange={(e) => handleSettingsChange("email", e.target.value)}
                             placeholder="info@vodoinstaler-zekic.rs"
+                            className="text-sm"
                           />
                         </div>
                         <div>
-                          <Label htmlFor="service-area">Oblast rada</Label>
+                          <Label htmlFor="service-area" className="text-sm">
+                            Oblast rada
+                          </Label>
                           <Input
                             id="service-area"
                             value={settings.service_area}
                             onChange={(e) => handleSettingsChange("service_area", e.target.value)}
                             placeholder="Beograd i okolina"
+                            className="text-sm"
                           />
                         </div>
                       </div>
 
                       <div>
-                        <Label htmlFor="address">Adresa</Label>
+                        <Label htmlFor="address" className="text-sm">
+                          Adresa
+                        </Label>
                         <Input
                           id="address"
                           value={settings.address}
                           onChange={(e) => handleSettingsChange("address", e.target.value)}
                           placeholder="Trebevićka 17, Beograd"
+                          className="text-sm"
                         />
                       </div>
 
                       <div>
-                        <Label htmlFor="working-hours">Radno vreme</Label>
+                        <Label htmlFor="working-hours" className="text-sm">
+                          Radno vreme
+                        </Label>
                         <Input
                           id="working-hours"
                           value={settings.working_hours}
                           onChange={(e) => handleSettingsChange("working_hours", e.target.value)}
                           placeholder="Ponedeljak - Petak: 08:00 - 20:00"
+                          className="text-sm"
                         />
                       </div>
 
                       <div>
-                        <Label htmlFor="description">Opis poslovanja</Label>
+                        <Label htmlFor="description" className="text-sm">
+                          Opis poslovanja
+                        </Label>
                         <Textarea
                           id="description"
                           value={settings.description}
                           onChange={(e) => handleSettingsChange("description", e.target.value)}
-                          rows={4}
+                          rows={3}
                           placeholder="Profesionalne vodoinstalaterske usluge sa preko 25 godina iskustva..."
+                          className="text-sm"
                         />
                       </div>
 
@@ -977,12 +1072,14 @@ export default function AdminDashboard() {
                           onChange={(e) => handleSettingsChange("emergency_available", e.target.checked)}
                           className="rounded border-gray-300"
                         />
-                        <Label htmlFor="emergency-available">Dostupan za hitne intervencije</Label>
+                        <Label htmlFor="emergency-available" className="text-sm">
+                          Dostupan za hitne intervencije
+                        </Label>
                       </div>
 
                       <Button
                         onClick={saveSettings}
-                        className="bg-blue-600 hover:bg-blue-700"
+                        className="bg-blue-600 hover:bg-blue-700 w-full sm:w-auto"
                         disabled={isSavingSettings}
                       >
                         {isSavingSettings ? (
