@@ -918,8 +918,10 @@ export default function AdminDashboard() {
               )}
             </TabsContent>
 
-            <TabsContent value="testimonials" className="space-y-4 sm:space-y-6">
-              <TestimonialsAdmin />
+            <TabsContent value="testimonials" className="space-y-4 sm:space-y-6 overflow-hidden">
+              <div className="w-full max-w-full">
+                <TestimonialsAdmin />
+              </div>
             </TabsContent>
 
             <TabsContent value="services" className="space-y-4 sm:space-y-6">

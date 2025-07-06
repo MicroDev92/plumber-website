@@ -9,7 +9,8 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Wrench, LogIn, Loader2, AlertCircle, Eye, EyeOff } from "lucide-react"
+import { Wrench, LogIn, Loader2, AlertCircle, Eye, EyeOff, ArrowLeft } from "lucide-react"
+import Link from "next/link"
 
 export default function AdminLogin() {
   const [username, setUsername] = useState("")
@@ -18,47 +19,33 @@ export default function AdminLogin() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
   const [isMounted, setIsMounted] = useState(false)
-  const [isCheckingSession, setIsCheckingSession] = useState(true)
   const router = useRouter()
 
   useEffect(() => {
     setIsMounted(true)
 
-    // Check if already logged in - but don't auto-redirect immediately
-    const checkExistingSession = () => {
-      if (typeof window !== "undefined") {
-        const isLoggedIn = localStorage.getItem("adminLoggedIn")
-        const loginTime = localStorage.getItem("adminLoginTime")
+    // Simple session check - if logged in, redirect immediately
+    if (typeof window !== "undefined") {
+      const isLoggedIn = localStorage.getItem("adminLoggedIn")
+      const loginTime = localStorage.getItem("adminLoginTime")
 
-        console.log("🔍 Checking existing session...")
-        console.log("📊 isLoggedIn:", isLoggedIn)
-        console.log("⏰ loginTime:", loginTime)
+      if (isLoggedIn === "true" && loginTime) {
+        const timeDiff = Date.now() - Number.parseInt(loginTime)
 
-        if (isLoggedIn === "true" && loginTime) {
-          const timeDiff = Date.now() - Number.parseInt(loginTime)
-          console.log("⏱️ Time difference:", timeDiff)
-
-          // Session expires after 24 hours
-          if (timeDiff < 24 * 60 * 60 * 1000) {
-            console.log("✅ Valid session found, but waiting for user interaction...")
-            // Don't auto-redirect, let user choose to continue or login again
-            setIsCheckingSession(false)
-            return
-          } else {
-            console.log("⏰ Session expired, clearing storage...")
-            localStorage.removeItem("adminLoggedIn")
-            localStorage.removeItem("adminLoginTime")
-            localStorage.removeItem("adminUser")
-          }
+        // Session expires after 24 hours
+        if (timeDiff < 24 * 60 * 60 * 1000) {
+          console.log("✅ Valid session found, redirecting to dashboard...")
+          router.replace("/admin/dashboard")
+          return
+        } else {
+          // Clear expired session
+          localStorage.removeItem("adminLoggedIn")
+          localStorage.removeItem("adminLoginTime")
+          localStorage.removeItem("adminUser")
         }
       }
-      setIsCheckingSession(false)
     }
-
-    // Add a small delay to prevent immediate redirect
-    const timer = setTimeout(checkExistingSession, 500)
-    return () => clearTimeout(timer)
-  }, [])
+  }, [router])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -97,8 +84,6 @@ export default function AdminLogin() {
         }
 
         console.log("🔄 Redirecting to dashboard...")
-
-        // Use router.push instead of window.location for better UX
         router.push("/admin/dashboard")
       } else {
         console.log("❌ Login failed:", data.message)
@@ -112,40 +97,29 @@ export default function AdminLogin() {
     }
   }
 
-  const handleContinueSession = () => {
-    console.log("🔄 Continuing existing session...")
-    router.push("/admin/dashboard")
-  }
-
-  if (!isMounted || isCheckingSession) {
+  if (!isMounted) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 flex items-center justify-center">
         <div className="flex items-center gap-2 text-white">
           <Loader2 className="h-6 w-6 animate-spin" />
-          <span>Proverava se sesija...</span>
+          <span>Učitavanje...</span>
         </div>
       </div>
     )
-  }
-
-  // Check if user has valid session but show option to continue
-  const hasValidSession = () => {
-    if (typeof window !== "undefined") {
-      const isLoggedIn = localStorage.getItem("adminLoggedIn")
-      const loginTime = localStorage.getItem("adminLoginTime")
-
-      if (isLoggedIn === "true" && loginTime) {
-        const timeDiff = Date.now() - Number.parseInt(loginTime)
-        return timeDiff < 24 * 60 * 60 * 1000
-      }
-    }
-    return false
   }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 flex items-center justify-center p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
+          <div className="flex items-center justify-between mb-4">
+            <Link href="/">
+              <Button variant="ghost" size="sm" className="text-gray-600 hover:text-gray-900">
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Nazad na sajt
+              </Button>
+            </Link>
+          </div>
           <div className="flex items-center justify-center mb-4">
             <div className="bg-blue-600 p-3 rounded-lg">
               <Wrench className="h-8 w-8 text-white" />
@@ -155,29 +129,6 @@ export default function AdminLogin() {
           <CardDescription className="text-center">Prijavite se da pristupite admin panelu</CardDescription>
         </CardHeader>
         <CardContent>
-          {hasValidSession() && (
-            <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-              <p className="text-sm text-blue-800 mb-3">
-                Već ste prijavljeni. Želite li da nastavite sa postojećom sesijom?
-              </p>
-              <Button onClick={handleContinueSession} className="w-full mb-2 bg-blue-600 hover:bg-blue-700">
-                Nastavi sa sesijom
-              </Button>
-              <Button
-                variant="outline"
-                onClick={() => {
-                  localStorage.removeItem("adminLoggedIn")
-                  localStorage.removeItem("adminLoginTime")
-                  localStorage.removeItem("adminUser")
-                  window.location.reload()
-                }}
-                className="w-full"
-              >
-                Nova prijava
-              </Button>
-            </div>
-          )}
-
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="username">Korisničko ime</Label>

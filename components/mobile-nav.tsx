@@ -4,7 +4,7 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { Menu, Phone, Mail, MapPin, Clock, Wrench, Home, Camera, MessageSquare, Star } from "lucide-react"
+import { Menu, Phone, Mail, MapPin, Clock, Wrench, Home, Camera, MessageSquare, Star, Shield } from "lucide-react"
 import Link from "next/link"
 
 export function MobileNav() {
@@ -128,13 +128,38 @@ export function MobileNav() {
               <p className="text-sm text-red-700">Dostupni smo 24/7 za hitne vodoinstalaterske intervencije</p>
             </div>
 
-            {/* CTA Button */}
-            <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white" onClick={closeNav} asChild>
-              <Link href="#contact">
-                <MessageSquare className="h-4 w-4 mr-2" />
-                Zatražite ponudu
-              </Link>
-            </Button>
+            {/* Action Buttons */}
+            <div className="space-y-3 mb-6">
+              <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white" onClick={closeNav} asChild>
+                <Link href="#contact">
+                  <MessageSquare className="h-4 w-4 mr-2" />
+                  Zatražite ponudu
+                </Link>
+              </Button>
+
+              <Button variant="outline" className="w-full bg-transparent" onClick={closeNav} asChild>
+                <Link href="/testimonials/add">
+                  <Star className="h-4 w-4 mr-2" />
+                  Ostavite recenziju
+                </Link>
+              </Button>
+
+              <Button variant="outline" className="w-full bg-transparent" onClick={closeNav} asChild>
+                <Link href="/admin/login">
+                  <Shield className="h-4 w-4 mr-2" />
+                  Admin pristup
+                </Link>
+              </Button>
+            </div>
+
+            {/* Footer */}
+            <div className="border-t pt-6 text-center">
+              <p className="text-sm text-gray-500">
+                © 2024 Vodoinstalater Žekić
+                <br />
+                Licencirani i osigurani
+              </p>
+            </div>
           </div>
         </ScrollArea>
       </SheetContent>
