@@ -1,96 +1,137 @@
 "use client"
 
 import { useState } from "react"
-import Link from "next/link"
 import { Button } from "@/components/ui/button"
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { Menu, Wrench, Phone, Mail, Star, ImageIcon, MessageSquare } from "lucide-react"
-
-const navigation = [
-  { name: "Početna", href: "/" },
-  { name: "Usluge", href: "#services" },
-  { name: "Galerija", href: "#gallery" },
-  { name: "Recenzije", href: "#testimonials" },
-  { name: "Kontakt", href: "#contact" },
-]
+import { Menu, Wrench, Phone, Mail, MapPin } from "lucide-react"
+import Link from "next/link"
 
 export function MobileNav() {
   const [open, setOpen] = useState(false)
 
+  const closeMenu = () => setOpen(false)
+
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Button
-          variant="ghost"
-          className="mr-2 px-0 text-base hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 md:hidden"
-        >
-          <Menu className="h-6 w-6" />
-          <span className="sr-only">Toggle Menu</span>
+        <Button variant="ghost" size="sm" className="md:hidden text-white hover:bg-white/20">
+          <Menu className="h-5 w-5" />
+          <span className="sr-only">Otvori meni</span>
         </Button>
       </SheetTrigger>
-      <SheetContent side="left" className="pr-0 w-[300px] sm:w-[350px]">
+      <SheetContent side="right" className="w-[300px] sm:w-[400px] p-0">
         <ScrollArea className="h-full">
-          <div className="px-6 py-6">
-            {/* Logo */}
-            <div className="flex items-center gap-2 mb-8">
-              <div className="bg-blue-600 p-2 rounded-lg">
-                <Wrench className="h-6 w-6 text-white" />
-              </div>
-              <div>
-                <h2 className="text-lg font-bold text-gray-900">Vodoinstalater Žekić</h2>
-                <p className="text-sm text-gray-600">25 godina iskustva</p>
-              </div>
-            </div>
+          <div className="p-6">
+            <SheetHeader className="mb-8">
+              <SheetTitle className="flex items-center gap-3">
+                <div className="bg-blue-600 p-2 rounded-lg">
+                  <Wrench className="h-5 w-5 text-white" />
+                </div>
+                <div className="text-left">
+                  <p className="font-bold">Vodoinstalater Žekić</p>
+                  <p className="text-sm text-gray-500">Profesionalne usluge</p>
+                </div>
+              </SheetTitle>
+            </SheetHeader>
 
-            {/* Navigation Links */}
-            <nav className="space-y-4 mb-8">
-              {navigation.map((item) => (
+            <div className="space-y-6">
+              {/* Navigation Links */}
+              <nav className="space-y-4">
                 <Link
-                  key={item.name}
-                  href={item.href}
-                  onClick={() => setOpen(false)}
-                  className="flex items-center gap-3 px-3 py-2 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                  href="#services"
+                  onClick={closeMenu}
+                  className="block py-3 px-4 text-lg font-medium text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
                 >
-                  {item.name === "Početna" && <Wrench className="h-5 w-5" />}
-                  {item.name === "Usluge" && <Wrench className="h-5 w-5" />}
-                  {item.name === "Galerija" && <ImageIcon className="h-5 w-5" />}
-                  {item.name === "Recenzije" && <Star className="h-5 w-5" />}
-                  {item.name === "Kontakt" && <MessageSquare className="h-5 w-5" />}
-                  <span className="font-medium">{item.name}</span>
+                  Usluge
                 </Link>
-              ))}
-            </nav>
+                <Link
+                  href="#gallery"
+                  onClick={closeMenu}
+                  className="block py-3 px-4 text-lg font-medium text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+                >
+                  Galerija
+                </Link>
+                <Link
+                  href="#testimonials"
+                  onClick={closeMenu}
+                  className="block py-3 px-4 text-lg font-medium text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+                >
+                  Recenzije
+                </Link>
+                <Link
+                  href="#contact"
+                  onClick={closeMenu}
+                  className="block py-3 px-4 text-lg font-medium text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+                >
+                  Kontakt
+                </Link>
+              </nav>
 
-            {/* Contact Info */}
-            <div className="space-y-4 pt-4 border-t border-gray-200">
-              <div className="flex items-center gap-3 text-gray-600">
-                <Phone className="h-5 w-5 text-blue-600" />
-                <div>
-                  <p className="font-medium text-gray-900">Pozovite nas</p>
-                  <a href="tel:+381601234567" className="text-blue-600 hover:underline">
-                    +381 60 123 4567
+              {/* Quick Contact */}
+              <div className="border-t pt-6">
+                <h4 className="font-semibold text-gray-900 mb-4">Brzi kontakt</h4>
+                <div className="space-y-3">
+                  <a
+                    href="tel:+381601234567"
+                    className="flex items-center gap-3 p-3 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors"
+                    onClick={closeMenu}
+                  >
+                    <div className="bg-blue-600 p-2 rounded-lg">
+                      <Phone className="h-4 w-4 text-white" />
+                    </div>
+                    <div>
+                      <p className="font-medium text-blue-900">Pozovite odmah</p>
+                      <p className="text-sm text-blue-700">+381 60 123 4567</p>
+                    </div>
                   </a>
+
+                  <a
+                    href="mailto:info@vodoinstaler-zekic.rs"
+                    className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                    onClick={closeMenu}
+                  >
+                    <div className="bg-gray-600 p-2 rounded-lg">
+                      <Mail className="h-4 w-4 text-white" />
+                    </div>
+                    <div>
+                      <p className="font-medium text-gray-900">Email</p>
+                      <p className="text-sm text-gray-600">info@vodoinstaler-zekic.rs</p>
+                    </div>
+                  </a>
+
+                  <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                    <div className="bg-gray-600 p-2 rounded-lg">
+                      <MapPin className="h-4 w-4 text-white" />
+                    </div>
+                    <div>
+                      <p className="font-medium text-gray-900">Oblast rada</p>
+                      <p className="text-sm text-gray-600">Beograd i okolina</p>
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              <div className="flex items-center gap-3 text-gray-600">
-                <Mail className="h-5 w-5 text-blue-600" />
-                <div>
-                  <p className="font-medium text-gray-900">Email</p>
-                  <a href="mailto:info@vodoinstaler-zekic.rs" className="text-blue-600 hover:underline">
-                    info@vodoinstaler-zekic.rs
-                  </a>
-                </div>
+              {/* Action Buttons */}
+              <div className="border-t pt-6 space-y-3">
+                <Link href="/testimonials/add" onClick={closeMenu}>
+                  <Button className="w-full bg-blue-600 hover:bg-blue-700">Ostavite recenziju</Button>
+                </Link>
+                <Link href="/admin/login" onClick={closeMenu}>
+                  <Button variant="outline" className="w-full bg-transparent">
+                    Admin pristup
+                  </Button>
+                </Link>
               </div>
-            </div>
 
-            {/* CTA Button */}
-            <div className="pt-6">
-              <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white" onClick={() => setOpen(false)}>
-                <Phone className="h-4 w-4 mr-2" />
-                Pozovi odmah
-              </Button>
+              {/* Footer */}
+              <div className="border-t pt-6 text-center pb-6">
+                <p className="text-sm text-gray-500">
+                  © 2024 Vodoinstalater Žekić
+                  <br />
+                  Licencirani i osigurani
+                </p>
+              </div>
             </div>
           </div>
         </ScrollArea>

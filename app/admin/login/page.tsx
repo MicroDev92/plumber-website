@@ -9,13 +9,11 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Wrench, Loader2, AlertCircle } from "lucide-react"
+import { Wrench, LogIn, Loader2, AlertCircle } from "lucide-react"
 
 export default function AdminLogin() {
-  const [credentials, setCredentials] = useState({
-    username: "",
-    password: "",
-  })
+  const [username, setUsername] = useState("")
+  const [password, setPassword] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
   const [isMounted, setIsMounted] = useState(false)
@@ -35,13 +33,15 @@ export default function AdminLogin() {
 
       if (isLoggedIn === "true" && loginTime) {
         const timeDiff = Date.now() - Number.parseInt(loginTime)
+        console.log("⏱️ Time difference:", timeDiff)
+
+        // Session expires after 24 hours
         if (timeDiff < 24 * 60 * 60 * 1000) {
-          // 24 hours
-          console.log("✅ Valid session found, redirecting...")
+          console.log("✅ Valid session found, redirecting to dashboard...")
           router.replace("/admin/dashboard")
           return
         } else {
-          console.log("⏰ Session expired, clearing...")
+          console.log("⏰ Session expired, clearing storage...")
           localStorage.removeItem("adminLoggedIn")
           localStorage.removeItem("adminLoginTime")
           localStorage.removeItem("adminUser")
@@ -56,7 +56,7 @@ export default function AdminLogin() {
     setError("")
 
     console.log("🚀 Starting login process...")
-    console.log("👤 Username:", credentials.username)
+    console.log("👤 Username:", username)
 
     try {
       const response = await fetch("/api/admin/login", {
@@ -64,26 +64,25 @@ export default function AdminLogin() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(credentials),
+        body: JSON.stringify({ username, password }),
       })
 
       console.log("📡 Login response status:", response.status)
 
       const data = await response.json()
-      console.log("📦 Login response data:", data)
+      console.log("📊 Login response data:", data)
 
       if (response.ok && data.success) {
         console.log("✅ Login successful!")
 
-        // Store authentication state
         if (typeof window !== "undefined") {
           try {
             localStorage.setItem("adminLoggedIn", "true")
             localStorage.setItem("adminLoginTime", Date.now().toString())
-            localStorage.setItem("adminUser", credentials.username)
-            console.log("💾 Session data stored successfully")
+            localStorage.setItem("adminUser", username)
+            console.log("💾 Session data saved to localStorage")
           } catch (storageError) {
-            console.error("❌ Storage error:", storageError)
+            console.error("❌ Error saving to localStorage:", storageError)
           }
         }
 
@@ -100,7 +99,7 @@ export default function AdminLogin() {
         setError(data.message || "Neispravni podaci za prijavu")
       }
     } catch (error) {
-      console.error("💥 Login error:", error)
+      console.error("❌ Login error:", error)
       setError("Greška pri povezivanju sa serverom")
     } finally {
       setIsLoading(false)
@@ -127,7 +126,7 @@ export default function AdminLogin() {
               <Wrench className="h-8 w-8 text-white" />
             </div>
           </div>
-          <CardTitle className="text-2xl text-center">Admin prijava</CardTitle>
+          <CardTitle className="text-2xl text-center">Admin pristup</CardTitle>
           <CardDescription className="text-center">Prijavite se da pristupite admin panelu</CardDescription>
         </CardHeader>
         <CardContent>
@@ -137,8 +136,8 @@ export default function AdminLogin() {
               <Input
                 id="username"
                 type="text"
-                value={credentials.username}
-                onChange={(e) => setCredentials((prev) => ({ ...prev, username: e.target.value }))}
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
                 required
                 disabled={isLoading}
                 autoComplete="username"
@@ -150,8 +149,8 @@ export default function AdminLogin() {
               <Input
                 id="password"
                 type="password"
-                value={credentials.password}
-                onChange={(e) => setCredentials((prev) => ({ ...prev, password: e.target.value }))}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 required
                 disabled={isLoading}
                 autoComplete="current-password"
@@ -166,20 +165,25 @@ export default function AdminLogin() {
               </Alert>
             )}
 
-            <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700" disabled={isLoading}>
+            <Button type="submit" className="w-full" disabled={isLoading}>
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   Prijavljivanje...
                 </>
               ) : (
-                "Prijavite se"
+                <>
+                  <LogIn className="mr-2 h-4 w-4" />
+                  Prijavite se
+                </>
               )}
             </Button>
           </form>
 
-          <div className="mt-4 text-center text-sm text-gray-600">
-            <p>Demo podaci: admin / plumber2024</p>
+          <div className="mt-6 text-center">
+            <p className="text-sm text-gray-600">
+              Demo pristup: <code className="bg-gray-100 px-2 py-1 rounded text-xs">admin / plumber2024</code>
+            </p>
           </div>
         </CardContent>
       </Card>

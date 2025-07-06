@@ -85,7 +85,7 @@ export default function AdminDashboard() {
     isLoading: true,
     lastUpdated: null,
     dataSource: "loading",
-    averageRating: 0,
+    averageRating: 0, // ✅ Default value to prevent undefined error
   })
 
   const [isAuthenticated, setIsAuthenticated] = useState(false)
@@ -215,12 +215,12 @@ export default function AdminDashboard() {
         isLoading: false,
         lastUpdated: new Date().toLocaleString("sr-RS"),
         dataSource: websiteData.source || "demo",
-        averageRating: inquiriesData.averageRating || 0,
+        averageRating: inquiriesData.averageRating || 0, // ✅ Safe fallback
       })
     } catch (error) {
       console.error("❌ Failed to fetch analytics:", error)
 
-      // Fallback to demo data
+      // Fallback to demo data with safe defaults
       setAnalytics({
         totalPhotos: photos.length,
         monthlyVisits: 0,
@@ -229,7 +229,7 @@ export default function AdminDashboard() {
         isLoading: false,
         lastUpdated: new Date().toLocaleString("sr-RS"),
         dataSource: "production",
-        averageRating: 0,
+        averageRating: 0, // ✅ Safe fallback
       })
     }
   }

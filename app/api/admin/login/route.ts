@@ -1,20 +1,21 @@
 import { type NextRequest, NextResponse } from "next/server"
 
-// Demo credentials - in production, use proper authentication
-const ADMIN_CREDENTIALS = {
-  username: "admin",
-  password: "plumber2024",
-}
-
 export async function POST(request: NextRequest) {
   try {
     const { username, password } = await request.json()
 
     console.log("🔐 Admin login attempt:", { username })
 
-    // Validate credentials
-    if (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
-      console.log("✅ Admin login successful")
+    // Demo credentials for development
+    const validCredentials = [
+      { username: "admin", password: "plumber2024" },
+      { username: "vodoinstaler", password: "zekic2024" },
+    ]
+
+    const isValid = validCredentials.some((cred) => cred.username === username && cred.password === password)
+
+    if (isValid) {
+      console.log("✅ Login successful for:", username)
 
       return NextResponse.json(
         {
@@ -25,14 +26,13 @@ export async function POST(request: NextRequest) {
         {
           status: 200,
           headers: {
-            "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+            "Cache-Control": "no-store, no-cache, must-revalidate",
             Pragma: "no-cache",
-            Expires: "0",
           },
         },
       )
     } else {
-      console.log("❌ Admin login failed - invalid credentials")
+      console.log("❌ Invalid credentials for:", username)
 
       return NextResponse.json(
         {
@@ -43,12 +43,12 @@ export async function POST(request: NextRequest) {
       )
     }
   } catch (error) {
-    console.error("💥 Admin login error:", error)
+    console.error("❌ Login API error:", error)
 
     return NextResponse.json(
       {
         success: false,
-        message: "Greška servera",
+        message: "Greška na serveru",
       },
       { status: 500 },
     )
