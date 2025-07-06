@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Alert, AlertDescription } from "@/components/ui/alert"
@@ -21,6 +21,23 @@ export function ContactForm() {
     type: "success" | "error" | null
     message: string
   }>({ type: null, message: "" })
+  const [settings, setSettings] = useState<any>(null)
+
+  // Fetch settings on component mount
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const response = await fetch("/api/settings")
+        const result = await response.json()
+        if (result.success) {
+          setSettings(result.settings)
+        }
+      } catch (error) {
+        console.error("Failed to fetch settings:", error)
+      }
+    }
+    fetchSettings()
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -74,6 +91,8 @@ export function ContactForm() {
       [e.target.name]: e.target.value,
     }))
   }
+
+  const phoneNumber = settings?.phone || "+381 60 123 4567"
 
   return (
     <Card className="bg-white text-slate-900">
@@ -195,7 +214,7 @@ export function ContactForm() {
 
         <div className="mt-4 text-center">
           <p className="text-xs text-gray-500">
-            Ili nas pozovite direktno: <strong>+381 60 123 4567</strong>
+            Ili nas pozovite direktno: <strong>{phoneNumber}</strong>
           </p>
         </div>
       </CardContent>
