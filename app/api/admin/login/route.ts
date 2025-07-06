@@ -1,47 +1,50 @@
 import { type NextRequest, NextResponse } from "next/server"
 
+// Demo credentials - in production, use proper authentication
+const ADMIN_CREDENTIALS = {
+  username: "admin",
+  password: "plumber2024",
+}
+
 export async function POST(request: NextRequest) {
   try {
-    console.log("🔐 Admin login attempt received")
-
     const { username, password } = await request.json()
 
-    console.log("👤 Username:", username)
-    console.log("🔑 Password length:", password?.length)
+    console.log("🔐 Admin login attempt:", { username })
 
-    // Simple demo authentication
-    // In production, you would validate against a database with hashed passwords
-    if (username === "admin" && password === "plumber2024") {
-      console.log("✅ Login successful")
+    // Validate credentials
+    if (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
+      console.log("✅ Admin login successful")
 
-      const response = NextResponse.json({
-        success: true,
-        message: "Uspešna prijava",
-        user: {
-          username: "admin",
-          role: "admin",
-          loginTime: new Date().toISOString(),
+      return NextResponse.json(
+        {
+          success: true,
+          message: "Uspešna prijava",
+          user: { username },
         },
-      })
-
-      // Set secure headers for mobile compatibility
-      response.headers.set("Cache-Control", "no-cache, no-store, must-revalidate")
-      response.headers.set("Pragma", "no-cache")
-      response.headers.set("Expires", "0")
-
-      return response
+        {
+          status: 200,
+          headers: {
+            "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+            Pragma: "no-cache",
+            Expires: "0",
+          },
+        },
+      )
     } else {
-      console.log("❌ Invalid credentials")
+      console.log("❌ Admin login failed - invalid credentials")
+
       return NextResponse.json(
         {
           success: false,
-          message: "Neispravni podaci za prijavu",
+          message: "Neispravno korisničko ime ili lozinka",
         },
         { status: 401 },
       )
     }
   } catch (error) {
-    console.error("🚨 Login error:", error)
+    console.error("💥 Admin login error:", error)
+
     return NextResponse.json(
       {
         success: false,
