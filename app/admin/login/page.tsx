@@ -1,8 +1,7 @@
 "use client"
 
 import type React from "react"
-
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -17,14 +16,42 @@ export default function AdminLogin() {
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState("")
   const [isLoading, setIsLoading] = useState(false)
+  const [isMounted, setIsMounted] = useState(false)
   const router = useRouter()
+
+  useEffect(() => {
+    setIsMounted(true)
+    // Check if already logged in
+    if (typeof window !== "undefined") {
+      const isLoggedIn = localStorage.getItem("adminLoggedIn")
+      const loginTime = localStorage.getItem("adminLoginTime")
+
+      if (isLoggedIn === "true" && loginTime) {
+        const timeDiff = Date.now() - Number.parseInt(loginTime)
+        // Session expires after 24 hours
+        if (timeDiff < 24 * 60 * 60 * 1000) {
+          router.replace("/admin/dashboard")
+          return
+        } else {
+          // Clear expired session
+          localStorage.removeItem("adminLoggedIn")
+          localStorage.removeItem("adminLoginTime")
+        }
+      }
+    }
+  }, [router])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+
+    if (!isMounted) return
+
     setError("")
     setIsLoading(true)
 
     try {
+      console.log("🔐 Attempting login...")
+
       const response = await fetch("/api/admin/login", {
         method: "POST",
         headers: {
@@ -33,21 +60,47 @@ export default function AdminLogin() {
         body: JSON.stringify({ username, password }),
       })
 
+      console.log("📡 Response status:", response.status)
+
       const data = await response.json()
+      console.log("📊 Response data:", data)
 
       if (response.ok && data.success) {
-        // Store auth token
-        localStorage.setItem("admin_token", data.token)
-        router.push("/admin/dashboard")
+        console.log("✅ Login successful, storing session...")
+
+        // Store admin session with error handling
+        try {
+          localStorage.setItem("adminLoggedIn", "true")
+          localStorage.setItem("adminLoginTime", Date.now().toString())
+          localStorage.setItem("adminUser", JSON.stringify(data.user || { username: "admin" }))
+
+          console.log("💾 Session stored, redirecting...")
+
+          // Force redirect with replace to prevent back navigation
+          window.location.href = "/admin/dashboard"
+        } catch (storageError) {
+          console.error("❌ Storage error:", storageError)
+          setError("Greška pri čuvanju sesije")
+        }
       } else {
+        console.log("❌ Login failed:", data.message)
         setError(data.message || "Neispravni podaci za prijavu")
       }
     } catch (error) {
-      console.error("Login error:", error)
-      setError("Greška pri povezivanju sa serverom")
+      console.error("🚨 Network error:", error)
+      setError("Greška pri povezivanju sa serverom. Proverite internet konekciju.")
     } finally {
       setIsLoading(false)
     }
+  }
+
+  // Don't render until mounted to prevent hydration issues
+  if (!isMounted) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+      </div>
+    )
   }
 
   return (
@@ -74,6 +127,7 @@ export default function AdminLogin() {
                 placeholder="Unesite korisničko ime"
                 required
                 disabled={isLoading}
+                autoComplete="username"
               />
             </div>
             <div className="space-y-2">
@@ -87,6 +141,7 @@ export default function AdminLogin() {
                   placeholder="Unesite lozinku"
                   required
                   disabled={isLoading}
+                  autoComplete="current-password"
                 />
                 <Button
                   type="button"
@@ -95,6 +150,7 @@ export default function AdminLogin() {
                   className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
                   onClick={() => setShowPassword(!showPassword)}
                   disabled={isLoading}
+                  tabIndex={-1}
                 >
                   {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </Button>
