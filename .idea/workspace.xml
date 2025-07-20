@@ -5,35 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="33b1f8be-b8d4-40b4-9043-2ca555295e80" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/app/api/admin/login.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/api/cache/clear-all/route.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/api/gallery/cleanup-all/route.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/api/gallery/cleanup/route.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/api/gallery/debug/route.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/api/gallery/force-refresh/route.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/api/testimonials/published/route.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/api/testimonials/submit/route.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/api/vercel/purge-cache/route.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/testimonials/add/page.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/mobile-nav.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/testimonials-admin.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scripts/05-fix-testimonials-table.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/vodoinstalater-zekic-logo.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RESPONSIVE-FEATURES.md" beforeDir="false" afterPath="$PROJECT_DIR$/RESPONSIVE-FEATURES.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/admin/dashboard/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/admin/dashboard/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/admin/login/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/admin/login/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/gallery/[id]/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/gallery/[id]/route.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/gallery/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/gallery/route.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/gallery/upload/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/gallery/upload/route.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/testimonials/[id]/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/testimonials/[id]/route.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/layout.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/gallery-section.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/gallery-section.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/testimonials-section.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/testimonials-section.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/ui/sheet.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/ui/sheet.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/upload.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/upload.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/responsive-demo.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/responsive-demo.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -65,7 +40,6 @@
 }</component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/package-lock.json" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/Aleksa/source/repos/plumber-website/scripts/01-setup-database.sql" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="ProjectColorInfo">{
@@ -119,7 +93,8 @@
       <updated>1751115231982</updated>
       <workItem from="1751115234426" duration="3381000" />
       <workItem from="1751190015219" duration="4626000" />
-      <workItem from="1751197283434" duration="5844000" />
+      <workItem from="1751197283434" duration="12945000" />
+      <workItem from="1751808178004" duration="9337000" />
     </task>
     <task id="LOCAL-00001" summary="init commit 2">
       <option name="closed" value="true" />
@@ -161,7 +136,15 @@
       <option name="project" value="LOCAL" />
       <updated>1751201350509</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Reviews and Admin changes">
+      <option name="closed" value="true" />
+      <created>1751208640749</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1751208640749</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -176,7 +159,8 @@
     <MESSAGE value="Name changes" />
     <MESSAGE value="More name changes" />
     <MESSAGE value="Photos and Testimonials" />
-    <option name="LAST_COMMIT_MESSAGE" value="Photos and Testimonials" />
+    <MESSAGE value="Reviews and Admin changes" />
+    <option name="LAST_COMMIT_MESSAGE" value="Reviews and Admin changes" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

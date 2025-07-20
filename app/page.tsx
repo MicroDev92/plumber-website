@@ -119,7 +119,7 @@ export default async function HomePage() {
             </div>
             <div className="relative">
               <Image
-                src="/placeholder.svg?height=500&width=600"
+                src="/logo.png"
                 alt="Professional plumber at work"
                 width={600}
                 height={500}
