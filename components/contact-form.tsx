@@ -4,17 +4,9 @@ import type React from "react"
 
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { useToast } from "@/hooks/use-toast"
-import { Send } from "lucide-react"
-
-interface Settings {
-  phone: string
-}
+import { Card, CardContent } from "@/components/ui/card"
+import { Alert, AlertDescription } from "@/components/ui/alert"
+import { CheckCircle, AlertCircle, Loader2 } from "lucide-react"
 
 export function ContactForm() {
   const [formData, setFormData] = useState({
@@ -25,30 +17,32 @@ export function ContactForm() {
     message: "",
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [settings, setSettings] = useState<Settings>({ phone: "+381 60 123 4567" })
-  const { toast } = useToast()
+  const [submitStatus, setSubmitStatus] = useState<{
+    type: "success" | "error" | null
+    message: string
+  }>({ type: null, message: "" })
+  const [settings, setSettings] = useState<any>(null)
 
+  // Fetch settings on component mount
   useEffect(() => {
     const fetchSettings = async () => {
       try {
         const response = await fetch("/api/settings")
-        if (response.ok) {
-          const data = await response.json()
-          if (data.settings?.phone) {
-            setSettings({ phone: data.settings.phone })
-          }
+        const result = await response.json()
+        if (result.success) {
+          setSettings(result.settings)
         }
       } catch (error) {
-        console.error("Error fetching settings:", error)
+        console.error("Failed to fetch settings:", error)
       }
     }
-
     fetchSettings()
   }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
+    setSubmitStatus({ type: null, message: "" })
 
     try {
       const response = await fetch("/api/contact", {
@@ -59,13 +53,14 @@ export function ContactForm() {
         body: JSON.stringify(formData),
       })
 
-      const data = await response.json()
+      const result = await response.json()
 
-      if (data.success) {
-        toast({
-          title: "Poruka poslata!",
-          description: "Kontaktiraćemo vas u najkraćem mogućem roku.",
+      if (result.success) {
+        setSubmitStatus({
+          type: "success",
+          message: result.message,
         })
+        // Reset form
         setFormData({
           name: "",
           email: "",
@@ -74,116 +69,154 @@ export function ContactForm() {
           message: "",
         })
       } else {
-        toast({
-          title: "Greška",
-          description: data.message || "Došlo je do greške prilikom slanja poruke.",
-          variant: "destructive",
+        setSubmitStatus({
+          type: "error",
+          message: result.message,
         })
       }
     } catch (error) {
-      toast({
-        title: "Greška",
-        description: "Došlo je do greške prilikom slanja poruke.",
-        variant: "destructive",
+      console.error("Contact form error:", error)
+      setSubmitStatus({
+        type: "error",
+        message: "Došlo je do greške pri slanju poruke. Molimo pozovite nas direktno na +381 60 123 4567.",
       })
     } finally {
       setIsSubmitting(false)
     }
   }
 
-  const handleInputChange = (field: string, value: string) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData((prev) => ({
       ...prev,
-      [field]: value,
+      [e.target.name]: e.target.value,
     }))
   }
 
+  const phoneNumber = settings?.phone || "+381 60 123 4567"
+
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="text-2xl text-gray-900">Pošaljite nam poruku</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="name">Ime i prezime *</Label>
-              <Input
-                id="name"
-                type="text"
-                value={formData.name}
-                onChange={(e) => handleInputChange("name", e.target.value)}
-                required
-                className="mt-1"
-              />
-            </div>
-            <div>
-              <Label htmlFor="email">Email adresa *</Label>
-              <Input
-                id="email"
-                type="email"
-                value={formData.email}
-                onChange={(e) => handleInputChange("email", e.target.value)}
-                required
-                className="mt-1"
-              />
-            </div>
-          </div>
+    <Card className="bg-white text-slate-900">
+      <CardContent className="p-6">
+        <h4 className="text-xl font-semibold mb-4">Zahtevajte predračun</h4>
 
-          <div>
-            <Label htmlFor="phone">Telefon</Label>
-            <Input
-              id="phone"
-              type="tel"
-              value={formData.phone}
-              onChange={(e) => handleInputChange("phone", e.target.value)}
-              placeholder={settings.phone}
-              className="mt-1"
-            />
-          </div>
-
-          <div>
-            <Label htmlFor="service">Tip usluge</Label>
-            <Select value={formData.service} onValueChange={(value) => handleInputChange("service", value)}>
-              <SelectTrigger className="mt-1">
-                <SelectValue placeholder="Izaberite tip usluge" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="popravka-cevi">Popravka cevi</SelectItem>
-                <SelectItem value="instalacija-sanitarija">Instalacija sanitarija</SelectItem>
-                <SelectItem value="hitna-intervencija">Hitna intervencija</SelectItem>
-                <SelectItem value="odrzavanje-sistema">Održavanje sistema</SelectItem>
-                <SelectItem value="ciscenje-kanalizacije">Čišćenje kanalizacije</SelectItem>
-                <SelectItem value="zamena-armatura">Zamena armatura</SelectItem>
-                <SelectItem value="ostalo">Ostalo</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div>
-            <Label htmlFor="message">Poruka *</Label>
-            <Textarea
-              id="message"
-              value={formData.message}
-              onChange={(e) => handleInputChange("message", e.target.value)}
-              required
-              rows={4}
-              className="mt-1"
-              placeholder="Opišite vaš problem ili potrebu..."
-            />
-          </div>
-
-          <Button type="submit" disabled={isSubmitting} className="w-full bg-blue-600 hover:bg-blue-700">
-            {isSubmitting ? (
-              "Šalje se..."
+        {submitStatus.type && (
+          <Alert
+            className={`mb-4 ${
+              submitStatus.type === "success" ? "border-green-200 bg-green-50" : "border-red-200 bg-red-50"
+            }`}
+          >
+            {submitStatus.type === "success" ? (
+              <CheckCircle className="h-4 w-4 text-green-600" />
             ) : (
+              <AlertCircle className="h-4 w-4 text-red-600" />
+            )}
+            <AlertDescription className={submitStatus.type === "success" ? "text-green-800" : "text-red-800"}>
+              {submitStatus.message}
+            </AlertDescription>
+          </Alert>
+        )}
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="grid md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium mb-2">
+                Ime <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Vaše ime"
+                required
+                disabled={isSubmitting}
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-2">Telefon</label>
+              <input
+                type="tel"
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
+                className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                placeholder="+381 60 123 4567"
+                disabled={isSubmitting}
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-2">
+              Email <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              placeholder="vas.email@example.com"
+              required
+              disabled={isSubmitting}
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-2">Potrebna usluga</label>
+            <select
+              name="service"
+              value={formData.service}
+              onChange={handleChange}
+              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              disabled={isSubmitting}
+            >
+              <option value="">Izaberite uslugu</option>
+              <option value="Hitna intervencija">Hitna intervencija</option>
+              <option value="Ugradnja sanitarija">Ugradnja sanitarija</option>
+              <option value="Popravka cevi">Popravka cevi</option>
+              <option value="Renoviranje kupatila">Renoviranje kupatila</option>
+              <option value="Čišćenje odvoda">Čišćenje odvoda</option>
+              <option value="Servis bojlera">Servis bojlera</option>
+              <option value="Održavanje">Održavanje</option>
+              <option value="Ostalo">Ostalo</option>
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-2">
+              Poruka <span className="text-red-500">*</span>
+            </label>
+            <textarea
+              name="message"
+              value={formData.message}
+              onChange={handleChange}
+              rows={4}
+              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Opišite detaljno vaše vodoinstalaterske potrebe..."
+              required
+              disabled={isSubmitting}
+            ></textarea>
+          </div>
+          <Button
+            type="submit"
+            className="w-full bg-blue-600 hover:bg-blue-700 disabled:opacity-50"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? (
               <>
-                <Send className="h-4 w-4 mr-2" />
-                Pošaljite poruku
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Šalje se...
               </>
+            ) : (
+              "Pošaljite poruku"
             )}
           </Button>
         </form>
+
+        <div className="mt-4 text-center">
+          <p className="text-xs text-gray-500">
+            Ili nas pozovite direktno: <strong>{phoneNumber}</strong>
+          </p>
+        </div>
       </CardContent>
     </Card>
   )

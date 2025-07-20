@@ -139,12 +139,9 @@ export function MobileNav() {
               <Button
                 className="w-full bg-blue-600 hover:bg-blue-700 text-white"
                 onClick={() => scrollToSection("contact")}
-                asChild
               >
-                <button>
-                  <MessageSquare className="h-4 w-4 mr-2" />
-                  Zatražite ponudu
-                </button>
+                <MessageSquare className="h-4 w-4 mr-2" />
+                Zatražite ponudu
               </Button>
 
               <Button variant="outline" className="w-full bg-transparent" onClick={closeNav} asChild>
