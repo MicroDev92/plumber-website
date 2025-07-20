@@ -367,6 +367,39 @@ export default function AdminDashboard() {
     }
   }
 
+  const handleReplyToInquiry = (inquiry: any) => {
+    const subject = `Re: ${inquiry.service ? inquiry.service + " - " : ""}Vaš upit`
+    const body = `Poštovani ${inquiry.name},
+
+Hvala vam što ste nas kontaktirali. U vezi sa vašim upitom:
+
+"${inquiry.message}"
+
+Odgovor:
+[Ovde unesite vaš odgovor]
+
+Srdačan pozdrav,
+${settings.business_name}
+${settings.phone}
+${settings.email}`
+
+    const mailtoLink = `mailto:${inquiry.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
+
+    try {
+      window.open(mailtoLink, "_blank")
+    } catch (error) {
+      // Fallback: copy email to clipboard
+      navigator.clipboard
+        .writeText(inquiry.email)
+        .then(() => {
+          alert(`Email adresa je kopirana u clipboard: ${inquiry.email}`)
+        })
+        .catch(() => {
+          alert(`Molimo pošaljite email na: ${inquiry.email}`)
+        })
+    }
+  }
+
   const fetchInquiries = async () => {
     try {
       setIsLoadingInquiries(true)
@@ -897,7 +930,12 @@ export default function AdminDashboard() {
                       </div>
 
                       <div className="flex flex-col sm:flex-row gap-2">
-                        <Button size="sm" variant="outline" className="w-full sm:w-auto bg-transparent">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="w-full sm:w-auto bg-transparent"
+                          onClick={() => handleReplyToInquiry(inquiry)}
+                        >
                           <Mail className="h-4 w-4 mr-2" />
                           Odgovori
                         </Button>
