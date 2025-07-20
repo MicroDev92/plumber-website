@@ -40,6 +40,7 @@ export default async function HomePage() {
   const email = settings?.email || "info@vodoinstaler-zekic.rs"
   const serviceArea = settings?.service_area || "Beograd i okolina"
   const address = settings?.address || "Trebevicka 17, Beograd"
+  const workingHours = settings?.working_hours || "Ponedeljak - Petak: 08:00 - 20:00, Subota: 09:00 - 17:00"
   const description =
     settings?.description ||
     "Profesionalne vodoinstalaterske usluge sa preko 25 godina iskustva. Pružamo kvalitetne usluge ugradnje, popravke i održavanja vodovodnih i kanalizacionih sistema."
@@ -273,6 +274,16 @@ export default async function HomePage() {
                     <p className="font-semibold">Adresa</p>
                     <p className="text-slate-300">{address}</p>
                     <p className="text-xs text-slate-400 mt-1">Oblast rada: {serviceArea}</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-4 p-3">
+                  <div className="bg-blue-600 p-2 md:p-3 rounded-lg">
+                    <Clock className="h-5 w-5 md:h-6 md:w-6" />
+                  </div>
+                  <div>
+                    <p className="font-semibold">Radno vreme</p>
+                    <p className="text-slate-300">{workingHours}</p>
                   </div>
                 </div>
               </div>

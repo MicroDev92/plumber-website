@@ -4,13 +4,13 @@ import type React from "react"
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Star, Send, CheckCircle, AlertCircle, ArrowLeft } from "lucide-react"
-import { toast } from "sonner"
 import Link from "next/link"
 
 interface TestimonialFormData {
@@ -30,17 +30,19 @@ export default function AddTestimonialPage() {
     service: "",
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitStatus, setSubmitStatus] = useState<{
+    type: "success" | "error" | null
+    message: string
+  }>({ type: null, message: "" })
 
   const handleInputChange = (field: keyof TestimonialFormData, value: string | number) => {
-    setFormData((prev) => ({
-      ...prev,
-      [field]: value,
-    }))
+    setFormData((prev) => ({ ...prev, [field]: value }))
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
+    setSubmitStatus({ type: null, message: "" })
 
     try {
       const response = await fetch("/api/testimonials/submit", {
@@ -54,11 +56,10 @@ export default function AddTestimonialPage() {
       const result = await response.json()
 
       if (result.success) {
-        toast.success("Recenzija je uspešno poslata!", {
-          description: "Hvala vam na povratnim informacijama. Recenzija će biti objavljena nakon pregleda.",
-          icon: <CheckCircle className="h-4 w-4" />,
+        setSubmitStatus({
+          type: "success",
+          message: "Hvala vam na recenziji! Biće objavljena nakon odobrenja.",
         })
-
         // Reset form
         setFormData({
           name: "",
@@ -68,56 +69,59 @@ export default function AddTestimonialPage() {
           service: "",
         })
       } else {
-        toast.error("Greška pri slanju recenzije", {
-          description: result.message || "Pokušajte ponovo kasnije.",
-          icon: <AlertCircle className="h-4 w-4" />,
+        setSubmitStatus({
+          type: "error",
+          message: result.message || "Došlo je do greške. Molimo pokušajte ponovo.",
         })
       }
     } catch (error) {
       console.error("Testimonial submission error:", error)
-      toast.error("Greška pri slanju recenzije", {
-        description: "Proverite internetsku vezu i pokušajte ponovo.",
-        icon: <AlertCircle className="h-4 w-4" />,
+      setSubmitStatus({
+        type: "error",
+        message: "Došlo je do greške. Molimo pokušajte ponovo.",
       })
     } finally {
       setIsSubmitting(false)
     }
   }
 
-  const renderStars = (rating: number, interactive = false) => {
-    return (
-      <div className="flex gap-1">
-        {[1, 2, 3, 4, 5].map((star) => (
-          <Star
-            key={star}
-            className={`h-6 w-6 ${
-              star <= rating ? "fill-yellow-400 text-yellow-400" : "text-gray-300"
-            } ${interactive ? "cursor-pointer hover:text-yellow-400" : ""}`}
-            onClick={interactive ? () => handleInputChange("rating", star) : undefined}
-          />
-        ))}
-      </div>
-    )
-  }
-
   return (
-    <div className="min-h-screen bg-gray-50 py-8 md:py-12">
+    <div className="min-h-screen bg-gray-50 py-12">
       <div className="container mx-auto px-4 max-w-2xl">
-        <div className="mb-6">
-          <Link href="/" className="inline-flex items-center text-blue-600 hover:text-blue-700 transition-colors">
-            <ArrowLeft className="h-4 w-4 mr-2" />
+        <div className="mb-8">
+          <Link href="/" className="inline-flex items-center text-blue-600 hover:text-blue-700 mb-4">
+            <ArrowLeft className="mr-2 h-4 w-4" />
             Nazad na početnu
           </Link>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Ostavite recenziju</h1>
+          <p className="text-gray-600">
+            Vaše iskustvo je važno za nas i pomaže drugim klijentima da donose informisane odluke.
+          </p>
         </div>
 
         <Card>
           <CardHeader>
-            <CardTitle className="text-2xl md:text-3xl text-center text-slate-900">Ostavite recenziju</CardTitle>
-            <p className="text-slate-600 text-center">
-              Vaše mišljenje je važno za nas! Podelite svoje iskustvo sa našim uslugama.
-            </p>
+            <CardTitle>Podelite svoje iskustvo</CardTitle>
+            <CardDescription>Sva polja označena sa * su obavezna</CardDescription>
           </CardHeader>
           <CardContent>
+            {submitStatus.type && (
+              <Alert
+                className={`mb-6 ${
+                  submitStatus.type === "success" ? "border-green-200 bg-green-50" : "border-red-200 bg-red-50"
+                }`}
+              >
+                {submitStatus.type === "success" ? (
+                  <CheckCircle className="h-4 w-4 text-green-600" />
+                ) : (
+                  <AlertCircle className="h-4 w-4 text-red-600" />
+                )}
+                <AlertDescription className={`${submitStatus.type === "success" ? "text-green-800" : "text-red-800"}`}>
+                  {submitStatus.message}
+                </AlertDescription>
+              </Alert>
+            )}
+
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -128,7 +132,6 @@ export default function AddTestimonialPage() {
                     value={formData.name}
                     onChange={(e) => handleInputChange("name", e.target.value)}
                     required
-                    className="mt-1"
                     placeholder="Vaše ime i prezime"
                   />
                 </div>
@@ -140,24 +143,24 @@ export default function AddTestimonialPage() {
                     value={formData.email}
                     onChange={(e) => handleInputChange("email", e.target.value)}
                     required
-                    className="mt-1"
                     placeholder="vasa@email.com"
                   />
                 </div>
               </div>
 
               <div>
-                <Label htmlFor="service">Tip usluge *</Label>
+                <Label htmlFor="service">Tip usluge</Label>
                 <Select value={formData.service} onValueChange={(value) => handleInputChange("service", value)}>
-                  <SelectTrigger className="mt-1">
+                  <SelectTrigger>
                     <SelectValue placeholder="Izaberite uslugu koju ste koristili" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="popravka">Popravka instalacija</SelectItem>
-                    <SelectItem value="ugradnja">Ugradnja sanitarija</SelectItem>
-                    <SelectItem value="ciscenje">Čišćenje odvoda</SelectItem>
-                    <SelectItem value="bojler">Usluge bojlera</SelectItem>
-                    <SelectItem value="hitno">Hitna intervencija</SelectItem>
+                    <SelectItem value="ugradnja-cevi">Ugradnja i popravka cevi</SelectItem>
+                    <SelectItem value="ugradnja-sanitarija">Ugradnja sanitarija</SelectItem>
+                    <SelectItem value="hitne-intervencije">Hitne intervencije</SelectItem>
+                    <SelectItem value="servisne-usluge">Servisne usluge</SelectItem>
+                    <SelectItem value="ciscenje-odvoda">Čišćenje odvoda</SelectItem>
+                    <SelectItem value="usluge-bojlera">Usluge bojlera</SelectItem>
                     <SelectItem value="ostalo">Ostalo</SelectItem>
                   </SelectContent>
                 </Select>
@@ -165,9 +168,20 @@ export default function AddTestimonialPage() {
 
               <div>
                 <Label>Ocena *</Label>
-                <div className="mt-2">
-                  {renderStars(formData.rating, true)}
-                  <p className="text-sm text-slate-600 mt-1">Kliknite na zvezde da date ocenu (1-5)</p>
+                <div className="flex items-center gap-2 mt-2">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <button
+                      key={star}
+                      type="button"
+                      onClick={() => handleInputChange("rating", star)}
+                      className={`p-1 rounded transition-colors ${
+                        star <= formData.rating ? "text-yellow-400" : "text-gray-300"
+                      }`}
+                    >
+                      <Star className="h-8 w-8 fill-current" />
+                    </button>
+                  ))}
+                  <span className="ml-2 text-sm text-gray-600">({formData.rating}/5)</span>
                 </div>
               </div>
 
@@ -178,8 +192,8 @@ export default function AddTestimonialPage() {
                   value={formData.text}
                   onChange={(e) => handleInputChange("text", e.target.value)}
                   required
-                  className="mt-1 min-h-[120px]"
-                  placeholder="Opišite vaše iskustvo sa našim uslugama..."
+                  rows={5}
+                  placeholder="Opišite svoje iskustvo sa našim uslugama..."
                 />
               </div>
 
@@ -197,13 +211,6 @@ export default function AddTestimonialPage() {
                 )}
               </Button>
             </form>
-
-            <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-              <p className="text-sm text-blue-800">
-                <strong>Napomena:</strong> Sve recenzije prolaze kroz proces pregleda pre objavljivanja. Vaša recenzija
-                će biti vidljiva na sajtu nakon što je odobrimo.
-              </p>
-            </div>
           </CardContent>
         </Card>
       </div>
