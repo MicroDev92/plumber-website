@@ -113,9 +113,6 @@ export default async function HomePage() {
                     {phone}
                   </a>
                 </Button>
-                <Button variant="outline" size="lg">
-                  Besplatan predračun
-                </Button>
               </div>
             </div>
             <div className="relative">
