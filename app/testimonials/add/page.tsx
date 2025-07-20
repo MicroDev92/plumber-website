@@ -4,18 +4,25 @@ import type React from "react"
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Badge } from "@/components/ui/badge"
-import { CheckCircle, AlertCircle, Star, ArrowLeft, MessageSquare } from "lucide-react"
+import { Star, Send, CheckCircle, AlertCircle, ArrowLeft } from "lucide-react"
+import { toast } from "sonner"
 import Link from "next/link"
 
+interface TestimonialFormData {
+  name: string
+  email: string
+  rating: number
+  text: string
+  service: string
+}
+
 export default function AddTestimonialPage() {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<TestimonialFormData>({
     name: "",
     email: "",
     rating: 5,
@@ -23,19 +30,17 @@ export default function AddTestimonialPage() {
     service: "",
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [submitStatus, setSubmitStatus] = useState<{
-    type: "success" | "error" | null
-    message: string
-  }>({ type: null, message: "" })
 
-  const handleInputChange = (field: string, value: string | number) => {
-    setFormData((prev) => ({ ...prev, [field]: value }))
+  const handleInputChange = (field: keyof TestimonialFormData, value: string | number) => {
+    setFormData((prev) => ({
+      ...prev,
+      [field]: value,
+    }))
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
-    setSubmitStatus({ type: null, message: "" })
 
     try {
       const response = await fetch("/api/testimonials/submit", {
@@ -49,10 +54,11 @@ export default function AddTestimonialPage() {
       const result = await response.json()
 
       if (result.success) {
-        setSubmitStatus({
-          type: "success",
-          message: "Hvala vam na recenziji! Vaše mišljenje je važno za nas i biće objavljeno nakon pregleda.",
+        toast.success("Recenzija je uspešno poslata!", {
+          description: "Hvala vam na povratnim informacijama. Recenzija će biti objavljena nakon pregleda.",
+          icon: <CheckCircle className="h-4 w-4" />,
         })
+
         // Reset form
         setFormData({
           name: "",
@@ -62,16 +68,16 @@ export default function AddTestimonialPage() {
           service: "",
         })
       } else {
-        setSubmitStatus({
-          type: "error",
-          message: result.message || "Došlo je do greške. Molimo pokušajte ponovo.",
+        toast.error("Greška pri slanju recenzije", {
+          description: result.message || "Pokušajte ponovo kasnije.",
+          icon: <AlertCircle className="h-4 w-4" />,
         })
       }
     } catch (error) {
       console.error("Testimonial submission error:", error)
-      setSubmitStatus({
-        type: "error",
-        message: "Došlo je do greške. Molimo pokušajte ponovo.",
+      toast.error("Greška pri slanju recenzije", {
+        description: "Proverite internetsku vezu i pokušajte ponovo.",
+        icon: <AlertCircle className="h-4 w-4" />,
       })
     } finally {
       setIsSubmitting(false)
@@ -95,168 +101,111 @@ export default function AddTestimonialPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 sm:py-12">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="mb-8">
-          <Link href="/" className="inline-flex items-center text-blue-600 hover:text-blue-700 mb-4 transition-colors">
+    <div className="min-h-screen bg-gray-50 py-8 md:py-12">
+      <div className="container mx-auto px-4 max-w-2xl">
+        <div className="mb-6">
+          <Link href="/" className="inline-flex items-center text-blue-600 hover:text-blue-700 transition-colors">
             <ArrowLeft className="h-4 w-4 mr-2" />
             Nazad na početnu
           </Link>
-          <div className="text-center">
-            <MessageSquare className="h-12 w-12 text-blue-600 mx-auto mb-4" />
-            <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Ostavite recenziju</h1>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Vaše iskustvo je važno za nas! Podelite svoje mišljenje o našim vodoinstalaterskim uslugama.
-            </p>
-          </div>
         </div>
 
-        {/* Form */}
-        <div className="max-w-2xl mx-auto">
-          <Card className="shadow-lg">
-            <CardHeader>
-              <CardTitle className="text-xl sm:text-2xl">Vaša recenzija</CardTitle>
-              <CardDescription>
-                Molimo vas da podelite svoje iskustvo sa našim uslugama. Sve recenzije se pregledaju pre objavljivanja.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              {submitStatus.type && (
-                <Alert
-                  className={`mb-6 ${
-                    submitStatus.type === "success" ? "border-green-200 bg-green-50" : "border-red-200 bg-red-50"
-                  }`}
-                >
-                  {submitStatus.type === "success" ? (
-                    <CheckCircle className="h-4 w-4 text-green-600" />
-                  ) : (
-                    <AlertCircle className="h-4 w-4 text-red-600" />
-                  )}
-                  <AlertDescription
-                    className={`${submitStatus.type === "success" ? "text-green-800" : "text-red-800"}`}
-                  >
-                    {submitStatus.message}
-                  </AlertDescription>
-                </Alert>
-              )}
-
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="name">Ime i prezime *</Label>
-                    <Input
-                      id="name"
-                      type="text"
-                      value={formData.name}
-                      onChange={(e) => handleInputChange("name", e.target.value)}
-                      required
-                      disabled={isSubmitting}
-                      placeholder="Vaše ime i prezime"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="email">Email adresa *</Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      value={formData.email}
-                      onChange={(e) => handleInputChange("email", e.target.value)}
-                      required
-                      disabled={isSubmitting}
-                      placeholder="vasa.email@example.com"
-                    />
-                  </div>
-                </div>
-
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-2xl md:text-3xl text-center text-slate-900">Ostavite recenziju</CardTitle>
+            <p className="text-slate-600 text-center">
+              Vaše mišljenje je važno za nas! Podelite svoje iskustvo sa našim uslugama.
+            </p>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="service">Tip usluge</Label>
-                  <Select value={formData.service} onValueChange={(value) => handleInputChange("service", value)}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Izaberite tip usluge koju ste koristili" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="popravka-slavine">Popravka slavine</SelectItem>
-                      <SelectItem value="ugradnja-kupatila">Ugradnja kupatila</SelectItem>
-                      <SelectItem value="popravka-wc-solje">Popravka WC šolje</SelectItem>
-                      <SelectItem value="zamena-cevi">Zamena cevi</SelectItem>
-                      <SelectItem value="ugradnja-bojlera">Ugradnja bojlera</SelectItem>
-                      <SelectItem value="hitna-intervencija">Hitna intervencija</SelectItem>
-                      <SelectItem value="renoviranje-kupatila">Renoviranje kupatila</SelectItem>
-                      <SelectItem value="cisenje-odvoda">Čišćenje odvoda</SelectItem>
-                      <SelectItem value="servis-bojlera">Servis bojlera</SelectItem>
-                      <SelectItem value="odrzavanje">Održavanje</SelectItem>
-                      <SelectItem value="ostalo">Ostalo</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div>
-                  <Label>Ocena *</Label>
-                  <div className="mt-2">
-                    {renderStars(formData.rating, true)}
-                    <p className="text-sm text-gray-600 mt-1">
-                      Kliknite na zvezde da date ocenu (trenutno: {formData.rating}/5)
-                    </p>
-                  </div>
-                </div>
-
-                <div>
-                  <Label htmlFor="text">Vaša recenzija *</Label>
-                  <Textarea
-                    id="text"
-                    value={formData.text}
-                    onChange={(e) => handleInputChange("text", e.target.value)}
+                  <Label htmlFor="name">Ime i prezime *</Label>
+                  <Input
+                    id="name"
+                    type="text"
+                    value={formData.name}
+                    onChange={(e) => handleInputChange("name", e.target.value)}
                     required
-                    disabled={isSubmitting}
-                    rows={5}
-                    placeholder="Opišite vaše iskustvo sa našim uslugama. Šta vam se dopalo? Da li biste preporučili naše usluge drugima?"
+                    className="mt-1"
+                    placeholder="Vaše ime i prezime"
                   />
                 </div>
-
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                  <h4 className="font-semibold text-blue-900 mb-2">Napomena o privatnosti</h4>
-                  <p className="text-sm text-blue-800">
-                    Vaša email adresa neće biti javno prikazana. Koristimo je samo za kontakt u slučaju potrebe za
-                    dodatnim informacijama o vašoj recenziji.
-                  </p>
+                <div>
+                  <Label htmlFor="email">Email adresa *</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    value={formData.email}
+                    onChange={(e) => handleInputChange("email", e.target.value)}
+                    required
+                    className="mt-1"
+                    placeholder="vasa@email.com"
+                  />
                 </div>
+              </div>
 
-                <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700" disabled={isSubmitting}>
-                  {isSubmitting ? (
-                    <>
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
-                      Šalje se...
-                    </>
-                  ) : (
-                    <>
-                      <MessageSquare className="h-4 w-4 mr-2" />
-                      Pošaljite recenziju
-                    </>
-                  )}
-                </Button>
-              </form>
-            </CardContent>
-          </Card>
+              <div>
+                <Label htmlFor="service">Tip usluge *</Label>
+                <Select value={formData.service} onValueChange={(value) => handleInputChange("service", value)}>
+                  <SelectTrigger className="mt-1">
+                    <SelectValue placeholder="Izaberite uslugu koju ste koristili" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="popravka">Popravka instalacija</SelectItem>
+                    <SelectItem value="ugradnja">Ugradnja sanitarija</SelectItem>
+                    <SelectItem value="ciscenje">Čišćenje odvoda</SelectItem>
+                    <SelectItem value="bojler">Usluge bojlera</SelectItem>
+                    <SelectItem value="hitno">Hitna intervencija</SelectItem>
+                    <SelectItem value="ostalo">Ostalo</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
 
-          {/* Additional Info */}
-          <div className="mt-8 text-center">
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <div className="bg-white rounded-lg p-4 shadow">
-                <Badge className="bg-green-100 text-green-800 mb-2">Brza objava</Badge>
-                <p className="text-sm text-gray-600">Recenzije se objavljuju u roku od 24 sata</p>
+              <div>
+                <Label>Ocena *</Label>
+                <div className="mt-2">
+                  {renderStars(formData.rating, true)}
+                  <p className="text-sm text-slate-600 mt-1">Kliknite na zvezde da date ocenu (1-5)</p>
+                </div>
               </div>
-              <div className="bg-white rounded-lg p-4 shadow">
-                <Badge className="bg-blue-100 text-blue-800 mb-2">Provera kvaliteta</Badge>
-                <p className="text-sm text-gray-600">Sve recenzije se pregledaju pre objavljivanja</p>
+
+              <div>
+                <Label htmlFor="text">Vaša recenzija *</Label>
+                <Textarea
+                  id="text"
+                  value={formData.text}
+                  onChange={(e) => handleInputChange("text", e.target.value)}
+                  required
+                  className="mt-1 min-h-[120px]"
+                  placeholder="Opišite vaše iskustvo sa našim uslugama..."
+                />
               </div>
-              <div className="bg-white rounded-lg p-4 shadow">
-                <Badge className="bg-purple-100 text-purple-800 mb-2">Anonimnost</Badge>
-                <p className="text-sm text-gray-600">Email adresa se ne prikazuje javno</p>
-              </div>
+
+              <Button type="submit" disabled={isSubmitting} className="w-full bg-blue-600 hover:bg-blue-700">
+                {isSubmitting ? (
+                  <>
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
+                    Šalje se...
+                  </>
+                ) : (
+                  <>
+                    <Send className="mr-2 h-4 w-4" />
+                    Pošaljite recenziju
+                  </>
+                )}
+              </Button>
+            </form>
+
+            <div className="mt-6 p-4 bg-blue-50 rounded-lg">
+              <p className="text-sm text-blue-800">
+                <strong>Napomena:</strong> Sve recenzije prolaze kroz proces pregleda pre objavljivanja. Vaša recenzija
+                će biti vidljiva na sajtu nakon što je odobrimo.
+              </p>
             </div>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   )
