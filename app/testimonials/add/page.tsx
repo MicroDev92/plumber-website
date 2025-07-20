@@ -17,8 +17,8 @@ export default function AddTestimonial() {
     name: "",
     email: "",
     rating: 5,
-    comment: "",
-    service_type: "",
+    text: "", // Changed from 'comment' to 'text' to match API
+    service: "", // Changed from 'service_type' to 'service' to match API
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [status, setStatus] = useState<{ type: "success" | "error" | null; message: string }>({
@@ -52,8 +52,8 @@ export default function AddTestimonial() {
           name: "",
           email: "",
           rating: 5,
-          comment: "",
-          service_type: "",
+          text: "", // Changed from 'comment' to 'text'
+          service: "", // Changed from 'service_type' to 'service'
         })
       } else {
         setStatus({
@@ -155,11 +155,11 @@ export default function AddTestimonial() {
                 </div>
 
                 <div>
-                  <Label htmlFor="service-type">Tip usluge</Label>
+                  <Label htmlFor="service">Tip usluge</Label>
                   <Input
-                    id="service-type"
-                    value={formData.service_type}
-                    onChange={(e) => setFormData((prev) => ({ ...prev, service_type: e.target.value }))}
+                    id="service"
+                    value={formData.service}
+                    onChange={(e) => setFormData((prev) => ({ ...prev, service: e.target.value }))}
                     placeholder="npr. Ugradnja kupatila, Popravka cevi, Hitna intervencija"
                     disabled={isSubmitting}
                   />
@@ -196,11 +196,11 @@ export default function AddTestimonial() {
                 </div>
 
                 <div>
-                  <Label htmlFor="comment">Vaš komentar *</Label>
+                  <Label htmlFor="text">Vaš komentar *</Label>
                   <Textarea
-                    id="comment"
-                    value={formData.comment}
-                    onChange={(e) => setFormData((prev) => ({ ...prev, comment: e.target.value }))}
+                    id="text"
+                    value={formData.text}
+                    onChange={(e) => setFormData((prev) => ({ ...prev, text: e.target.value }))}
                     placeholder="Opišite vaše iskustvo sa našim uslugama..."
                     rows={5}
                     required
