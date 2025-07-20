@@ -37,7 +37,7 @@ export function MobileNav() {
                 <Wrench className="h-6 w-6 text-white" />
               </div>
               <div>
-                <h2 className="font-bold text-lg">Vodoinstalater Žekić</h2>
+                <h2 className="font-bold text-lg">Vodoinstalater Zekić</h2>
                 <p className="text-sm text-gray-600">25 godina iskustva</p>
               </div>
             </div>

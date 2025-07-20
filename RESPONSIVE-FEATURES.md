@@ -2,7 +2,7 @@
 
 ## ✅ Fully Responsive by Default
 
-The Vodoinstaler Žekić website is built with **mobile-first responsive design** using Tailwind CSS. Here's what makes it responsive:
+The Vodoinstaler Zekić website is built with **mobile-first responsive design** using Tailwind CSS. Here's what makes it responsive:
 
 ### 📱 Mobile (< 768px)
 - **Single column layouts** for easy scrolling

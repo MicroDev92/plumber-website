@@ -89,7 +89,7 @@
       <workItem from="1751115234426" duration="3381000" />
       <workItem from="1751190015219" duration="4626000" />
       <workItem from="1751197283434" duration="12945000" />
-      <workItem from="1751808178004" duration="13138000" />
+      <workItem from="1751808178004" duration="13542000" />
     </task>
     <task id="LOCAL-00001" summary="init commit 2">
       <option name="closed" value="true" />
@@ -155,7 +155,15 @@
       <option name="project" value="LOCAL" />
       <updated>1753031408911</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="removed button">
+      <option name="closed" value="true" />
+      <created>1753031810910</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1753031810910</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -173,7 +181,8 @@
     <MESSAGE value="Reviews and Admin changes" />
     <MESSAGE value="logo + email reply fix" />
     <MESSAGE value="Hamburger nav fix" />
-    <option name="LAST_COMMIT_MESSAGE" value="Hamburger nav fix" />
+    <MESSAGE value="removed button" />
+    <option name="LAST_COMMIT_MESSAGE" value="removed button" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

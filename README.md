@@ -1,4 +1,4 @@
-# Vodoinstaler Žekić - Production Website
+# Vodoinstaler Zekić - Production Website
 
 Professional plumber showcase website built with Next.js, Supabase, and Tailwind CSS.
 

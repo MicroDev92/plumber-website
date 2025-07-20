@@ -202,7 +202,7 @@ export default function AdminLogin() {
             <div className="mt-6 text-center">
               <div className="flex items-center justify-center space-x-2 text-sm text-gray-500">
                 <Wrench className="h-4 w-4" />
-                <span>Vodoinstalater Žekić - Admin Panel</span>
+                <span>Vodoinstalater Zekić - Admin Panel</span>
               </div>
             </div>
           </CardContent>
