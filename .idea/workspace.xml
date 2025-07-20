@@ -5,10 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="33b1f8be-b8d4-40b4-9043-2ca555295e80" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/public/vodoinstalater-zekic-logo.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/responsive-demo.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/responsive-demo.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -94,7 +91,7 @@
       <workItem from="1751115234426" duration="3381000" />
       <workItem from="1751190015219" duration="4626000" />
       <workItem from="1751197283434" duration="12945000" />
-      <workItem from="1751808178004" duration="9337000" />
+      <workItem from="1751808178004" duration="12696000" />
     </task>
     <task id="LOCAL-00001" summary="init commit 2">
       <option name="closed" value="true" />
@@ -144,7 +141,15 @@
       <option name="project" value="LOCAL" />
       <updated>1751208640749</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="logo + email reply fix">
+      <option name="closed" value="true" />
+      <created>1753018462120</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1753018462120</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -160,7 +165,8 @@
     <MESSAGE value="More name changes" />
     <MESSAGE value="Photos and Testimonials" />
     <MESSAGE value="Reviews and Admin changes" />
-    <option name="LAST_COMMIT_MESSAGE" value="Reviews and Admin changes" />
+    <MESSAGE value="logo + email reply fix" />
+    <option name="LAST_COMMIT_MESSAGE" value="logo + email reply fix" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
